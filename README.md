@@ -1,0 +1,1 @@
+A message board for users with validation and add/edit/delete post functionalities. You can also reply to posts.
