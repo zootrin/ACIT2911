@@ -26,8 +26,6 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
     var db = utils.getDb();
-
-    // TODO: FIX THIS SHIT
     var ObjectId = utils.getObjectId();
 
     db.collection('users').findOne({
