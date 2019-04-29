@@ -79,9 +79,7 @@ app.get("/registration", checkAuthentication_false, (request, response) => {
 });
 
 // Forum page
-app.get("/", async (request, response) => {
-    promises.messagePromise();
-
+app.get('/', async (request, response) => {
     var messages = await promises.messagePromise();
 
     response.render("forum.hbs", {
@@ -100,11 +98,8 @@ app.get("/new_post", checkAuthentication, (request, response) => {
 });
 
 // Dynamically generated endpoint for threads
-app.get("/thread/:id", async (request, response) => {
-    promises.threadPromise(request.params.id);
+app.get('/thread/:id', async (request, response) => {
     var thread = await promises.threadPromise(request.params.id);
-
-    promises.replyPromise(request.params.id);
     var replies = await promises.replyPromise(request.params.id);
 
     var isOP = false;
@@ -123,6 +118,18 @@ app.get("/thread/:id", async (request, response) => {
         id: thread._id,
         reply: replies,
         isOP: isOP,
+        thread: thread
+    });
+});
+
+// Dynamically generated endpoint for user profiles
+app.get('/user/:id', async (request, response) => {
+    var user = await promises.userPromise(request.params.id);
+    var thread = await promises.userthreadPromise(user.username);
+
+    response.render('user.hbs', {
+        title: 'My Account',
+        heading: user.username,
         thread: thread
     });
 });
