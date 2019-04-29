@@ -10,14 +10,21 @@ const pass = require("./passport.js");
 const forum = require("./forum.js");
 const promises = require("./promises.js");
 
+const notifs = require("./gen_notifs");
+
 const app = express();
 
-app.listen(port, () => {
+var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
 
 hbs.registerPartials(__dirname + "/views/partials");
+
+app.use(function(req, res, next) {
+    res.header("Service-Worker-Allowed", "/");
+    next();
+});
 
 app.use(express.static(__dirname + "/public"));
 app.use(
@@ -79,7 +86,7 @@ app.get("/registration", checkAuthentication_false, (request, response) => {
 });
 
 // Forum page
-app.get('/', async (request, response) => {
+app.get("/", async (request, response) => {
     var messages = await promises.messagePromise();
 
     response.render("forum.hbs", {
@@ -98,7 +105,7 @@ app.get("/new_post", checkAuthentication, (request, response) => {
 });
 
 // Dynamically generated endpoint for threads
-app.get('/thread/:id', async (request, response) => {
+app.get("/thread/:id", async (request, response) => {
     var thread = await promises.threadPromise(request.params.id);
     var replies = await promises.replyPromise(request.params.id);
 
@@ -123,13 +130,29 @@ app.get('/thread/:id', async (request, response) => {
 });
 
 // Dynamically generated endpoint for user profiles
-app.get('/user/:id', async (request, response) => {
+app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
 
-    response.render('user.hbs', {
-        title: 'My Account',
+    response.render("user.hbs", {
+        title: "My Account",
         heading: user.username,
         thread: thread
     });
 });
+
+app.post("/user/:id", async (request, response) => {
+    var user = await promises.userPromise(request.params.id);
+    var thread = await promises.userthreadPromise(user.username);
+    console.log(request.body)
+
+    response.render("user.hbs", {
+        title: "My Account",
+        heading: user.username,
+        thread: thread
+    });
+});
+
+exports.closeServer = function(){
+    server.close();
+  };

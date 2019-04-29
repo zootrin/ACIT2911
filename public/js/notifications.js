@@ -4,7 +4,7 @@
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", function() {
-        navigator.serviceWorker.register("/js/notif_worker.js").then(
+        navigator.serviceWorker.register("/js/notif_worker.js", {scope: '/'}).then(
             function(registration) {
                 // Registration was successful
                 console.log(
@@ -20,8 +20,10 @@ if ("serviceWorker" in navigator) {
     });
 }
 
+/*
 if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function(result) {
         console.log(result);
     });
 }
+*/
