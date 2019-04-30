@@ -144,3 +144,16 @@ app.get('/new_dm/:id', checkAuthentication, (request, response) => {
         recipient_id: request.params.id
     });
 });
+
+// Logged in user's DMs
+app.get('/dms', checkAuthentication, async (request, response) => {
+    var dms = await promises.dmPromise(request.user._id);
+
+    console.log(dms);
+
+    response.render('dms.hbs', {
+        title: 'DM Inbox',
+        heading: 'Direct Message Inbox',
+        dms: dms
+    });
+});

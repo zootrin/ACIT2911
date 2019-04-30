@@ -90,10 +90,27 @@ var userthreadPromise = (param_username) => {
     });
 };
 
+// Retrieves a list of all DMs of a user
+var dmPromise = (param_id) => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+
+        db.collection('direct_message').find({
+            recipient: param_id
+        }).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
 module.exports = {
     messagePromise: messagePromise,
     threadPromise: threadPromise,
     replyPromise: replyPromise,
     userPromise: userPromise,
-    userthreadPromise: userthreadPromise
+    userthreadPromise: userthreadPromise,
+    dmPromise: dmPromise
 };
