@@ -10,7 +10,7 @@ const pass = require("./passport.js");
 const forum = require("./forum.js");
 const promises = require("./promises.js");
 
-const notifs = require("./gen_notifs");
+//const notifs = require("./gen_notifs");
 
 const app = express();
 
@@ -145,6 +145,12 @@ app.post("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
     console.log(request.body)
+
+    /*
+    if (request.body.enable_notifications !== undefined) {
+        notifs.getPermission()
+    }
+    */
 
     response.render("user.hbs", {
         title: "My Account",

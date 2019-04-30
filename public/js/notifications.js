@@ -13,7 +13,7 @@ if ("serviceWorker" in navigator) {
                 );
             },
             function(err) {
-                // registration failed :(
+                // registration failed
                 console.log("ServiceWorker registration failed: ", err);
             }
         );
