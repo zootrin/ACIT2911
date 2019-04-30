@@ -4,13 +4,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const hbs = require("hbs");
 
-const utils = require("./utils.js");
-const register = require("./users.js");
-const pass = require("./passport.js");
-const forum = require("./forum.js");
-const promises = require("./promises.js");
-
-//const notifs = require("./gen_notifs");
+const utils = require('./utils.js');
+const register = require('./users.js');
+const pass = require('./passport.js');
+const forum = require('./forum.js');
+const promises = require('./promises.js');
+const dms = require('./messaging.js');
 
 const app = express();
 
@@ -44,6 +43,7 @@ hbs.registerHelper("year", () => {
 app.use(pass);
 app.use(register);
 app.use(forum);
+app.use(dms);
 
 // CHECKS AUTHENTICATION
 checkAuthentication = (request, response, next) => {
@@ -137,6 +137,7 @@ app.get("/user/:id", async (request, response) => {
     response.render("user.hbs", {
         title: "My Account",
         heading: user.username,
+        user_id: user._id,
         thread: thread
     });
 });
@@ -162,3 +163,11 @@ app.post("/user/:id", async (request, response) => {
 exports.closeServer = function(){
     server.close();
   };
+// Send new direct message
+app.get('/new_dm/:id', checkAuthentication, (request, response) => {
+    response.render('new_dm.hbs', {
+        title: 'Direct Message',
+        heading: 'Send a direct message',
+        recipient_id: request.params.id
+    });
+});
