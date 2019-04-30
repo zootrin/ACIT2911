@@ -1,4 +1,5 @@
 const utils = require('./utils.js');
+const _ = require("lodash")
 
 // Populates message board page with the titles of each 
 // message in the database
@@ -90,10 +91,56 @@ var userthreadPromise = (param_username) => {
     });
 };
 
+var getUserDMs = async param_id => {
+    return new Promise((resolve, reject) => {
+        try {
+            let db = utils.getDb();
+            let allDMs = {};
+
+            let sentDMs = _.groupBy(await db
+                .collection("direct_message")
+                .find({
+                    sender: param_id
+                })
+                .toArray(), 'recipient')
+            let recievedDMs = _.groupBy(await db
+                .collection("direct_message")
+                .find({
+                    recipient: param_id
+                })
+                .toArray(), 'sender')
+            
+            for (let key of sentDMs) {
+                allDMs[key] += sentDMs[key]
+            }
+            for (let key of recievedDMs) {
+                allDMs[key] += recievedDMs[key]
+            }
+
+            for (let key of allDMs) {
+                allDMs[key] = allDMs[key].sort((prev, next) => {
+                    if (prev < next) {
+                        return -1
+                    }
+                    if (prev > next) {
+                        return 1
+                    }
+                    return 0
+                })
+            }
+            resolve(allDMs)
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
+
 module.exports = {
     messagePromise: messagePromise,
     threadPromise: threadPromise,
     replyPromise: replyPromise,
     userPromise: userPromise,
-    userthreadPromise: userthreadPromise
+    userthreadPromise: userthreadPromise,
+    getUserDMs
 };
