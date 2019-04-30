@@ -90,6 +90,18 @@ app.get('/', async (request, response) => {
     });
 });
 
+// Search Thread Page
+app.get('/search', async (request, response) => {
+    //TODO: find search keyword to put in here ↓
+    var threads = await promises.searchPromise();
+
+    response.render('forum.hbs', {
+        title: 'Search',
+        heading: 'Search',
+        thread: threads
+    });
+});
+
 // Adding new post
 app.get('/new_post', checkAuthentication, (request, response) => {
     response.render('new_post.hbs', {

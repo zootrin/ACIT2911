@@ -19,6 +19,24 @@ var messagePromise = () => {
     });
 };
 
+// Retrieves threads with keywords
+var searchPromise = (param_keywords) => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+        
+        db.getCollection('direct_message').find({
+            "message_body": {
+                $regex: `.*${param_keywords}.*`
+            }
+        }).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
 // Retrieves thread details
 var threadPromise = (param_id) => {
     return new Promise((resolve, reject) => {
@@ -112,5 +130,6 @@ module.exports = {
     replyPromise: replyPromise,
     userPromise: userPromise,
     userthreadPromise: userthreadPromise,
-    dmPromise: dmPromise
+    dmPromise: dmPromise,
+    searchPromise: searchPromise
 };

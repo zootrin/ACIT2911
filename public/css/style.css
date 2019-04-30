@@ -42,12 +42,17 @@ li a:hover:not(.active) {
     max-height: 32px;
 }
 
-.container-1{
-    margin-top: 13px;
-    margin-left: 75px;
+.container-1 {
+    margin-top: 10px;
+    margin-left: 50px;
     width: 300px;
     vertical-align: middle;
     position: absolute;
+}
+
+#search {
+    border-radius: 3px;
+    padding: 3px;
 }
 
 
