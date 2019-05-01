@@ -185,6 +185,7 @@ app.get('/new_dm/:id', checkAuthentication, (request, response) => {
     });
 });
 
+
 // Logged in user's DMs
 app.get('/dms', checkAuthentication, async (request, response) => {
     var dms = await promises.dmPromise(request.user._id);

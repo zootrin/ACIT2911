@@ -127,6 +127,7 @@ var dmPromise = param_id => {
 
         db.collection("direct_message")
             .find({
+                // finds messages where user_id in users
                 users: {
                     $in: [param_id]
                 }
@@ -136,6 +137,7 @@ var dmPromise = param_id => {
                     reject(err);
                 }
 
+                // groups array elements into {otherUser_id:[messages]} objects
                 let dmsByUsers = _.groupBy(
                     result.map(message => {
                         message.users = message.users.filter(user => {
