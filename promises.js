@@ -1,22 +1,27 @@
 const utils = require('./utils.js');
 const _ = require("lodash");
 
-// Populates message board page with the titles of each 
+// Populates message board page with the titles of each
 // message in the database
 var messagePromise = () => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.collection('messages').find({
-            type: 'thread'
-        }, {
-            _id: 0
-        }).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result.reverse());
-        });
+        db.collection("messages")
+            .find(
+                {
+                    type: "thread"
+                },
+                {
+                    _id: 0
+                }
+            )
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result.reverse());
+            });
     });
 };
 
@@ -45,7 +50,7 @@ var searchPromise = (param_keywords, param_type) => {
 };
 
 // Retrieves thread details
-var threadPromise = (param_id) => {
+var threadPromise = param_id => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
         var ObjectId = utils.getObjectId();
@@ -54,7 +59,7 @@ var threadPromise = (param_id) => {
             _id: ObjectId(param_id)
         };
 
-        db.collection('messages').findOne(query, (err, result) => {
+        db.collection("messages").findOne(query, (err, result) => {
             if (err) {
                 reject(err);
             }
@@ -64,24 +69,26 @@ var threadPromise = (param_id) => {
 };
 
 // Retrieves all replies of a thread
-var replyPromise = (param_id) => {
-    return new Promise ((resolve, reject) => {
+var replyPromise = param_id => {
+    return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.collection('messages').find({
-            thread_id: param_id
-        }).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
+        db.collection("messages")
+            .find({
+                thread_id: param_id
+            })
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
     });
 };
 
 // Retrieves user details
-var userPromise = (param_id) => {
-    return new Promise ((resolve, reject) => {
+var userPromise = param_id => {
+    return new Promise((resolve, reject) => {
         var db = utils.getDb();
         var ObjectId = utils.getObjectId();
 
@@ -89,7 +96,7 @@ var userPromise = (param_id) => {
             _id: ObjectId(param_id)
         };
 
-        db.collection('users').findOne(query, (err, result) => {
+        db.collection("users").findOne(query, (err, result) => {
             if (err) {
                 reject(err);
             }
@@ -99,10 +106,9 @@ var userPromise = (param_id) => {
 };
 
 // Retrieves all threads of a user
-var userthreadPromise = (param_username) => {
+var userthreadPromise = param_username => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
-
         db.collection('messages').find({
             username: param_username,
             type: 'thread'
@@ -115,63 +121,35 @@ var userthreadPromise = (param_username) => {
     });
 };
 
-// var getUserDMs = async param_id => {
-//     return new Promise((resolve, reject) => {
-//         try {
-//             let db = utils.getDb();
-//             let allDMs = {};
-
-//             let sentDMs = _.groupBy(await db
-//                 .collection("direct_message")
-//                 .find({
-//                     sender: param_id
-//                 })
-//                 .toArray(), 'recipient')
-//             let recievedDMs = _.groupBy(await db
-//                 .collection("direct_message")
-//                 .find({
-//                     recipient: param_id
-//                 })
-//                 .toArray(), 'sender')
-            
-//             for (let key of sentDMs) {
-//                 allDMs[key] += sentDMs[key]
-//             }
-//             for (let key of recievedDMs) {
-//                 allDMs[key] += recievedDMs[key]
-//             }
-
-//             for (let key of allDMs) {
-//                 allDMs[key] = allDMs[key].sort((prev, next) => {
-//                     if (prev < next) {
-//                         return -1
-//                     }
-//                     if (prev > next) {
-//                         return 1
-//                     }
-//                     return 0
-//                 })
-//             }
-//             resolve(allDMs)
-//         } catch (err) {
-//             reject(err);
-//         }
-//     });
-// };
-
 // Retrieves a list of all DMs of a user
-var dmPromise = (param_id) => {
+var dmPromise = param_id => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.collection('direct_message').find({
-            recipient: param_id
-        }).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
+        db.collection("direct_message")
+            .find({
+                // finds messages where user_id in users
+                users: {
+                    $in: [param_id]
+                }
+            })
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+
+                // groups array elements into {otherUser_id:[messages]} objects
+                let dmsByUsers = _.groupBy(
+                    result.map(message => {
+                        message.users = message.users.filter(user => {
+                            user !== param_id;
+                        });
+                    }),
+                    "users"
+                );
+
+                resolve(dmsByUsers);
+            });
     });
 };
 
@@ -181,7 +159,6 @@ module.exports = {
     replyPromise: replyPromise,
     userPromise: userPromise,
     userthreadPromise: userthreadPromise,
-    // getUserDMs: getUserDMs,
     dmPromise: dmPromise,
     searchPromise: searchPromise
 };

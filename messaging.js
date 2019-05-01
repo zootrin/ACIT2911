@@ -30,11 +30,15 @@ function add_dm(request, response) {
     var db = utils.getDb();
     var ObjectId = utils.getObjectId();
 
+    // generates ID-like for querying
+    let users = [sender, ObjectID(recipient)].sort()
+
     db.collection('direct_message').insertOne({
         message_body: message_body,
         sender: sender,
         recipient: ObjectId(recipient),
-        send_date: get_date()
+        send_date: get_date(),
+        users: users
     }, (err, result) => {
         if (err) {
             response.send('Unable to send direct message');

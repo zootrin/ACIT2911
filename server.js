@@ -184,6 +184,7 @@ app.get("/user/:id", async (request, response) => {
     });
 });
 
+
 // Send new direct message
 app.get('/new_dm/:id', checkAuthentication, (request, response) => {
     response.render('new_dm.hbs', {
@@ -192,6 +193,7 @@ app.get('/new_dm/:id', checkAuthentication, (request, response) => {
         recipient_id: request.params.id
     });
 });
+
 
 // Logged in user's DMs
 app.get('/dms', checkAuthentication, async (request, response) => {
