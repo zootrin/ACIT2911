@@ -3,12 +3,12 @@
         <li><a href="/" class="home_link"><img src="/images/home.png"/ class="home_icon"></a></li>
         
     
-    <div class="container-1">
-        <form action="/search">
-            <input type="search" id="search" placeholder="Search..." />
-            <button type="submit">Go</button>
-        </form>
-    </div>
+        <div class="container-1">
+            <form method="get" action="/search">
+                <input type="search" name="keyword" id="search" placeholder="Search..." />
+                <input type="submit" value="Go"></input>
+            </form>
+        </div>
     
 
         {{#if isAuthenticated}}

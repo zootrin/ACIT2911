@@ -1,4 +1,4 @@
-const utils = require("./utils.js");
+const utils = require('./utils.js');
 const _ = require("lodash");
 
 // Populates message board page with the titles of each
@@ -25,23 +25,27 @@ var messagePromise = () => {
     });
 };
 
-// Retrieves threads with keywords
-var searchPromise = param_keywords => {
+// Retrieves threads/replies with keywords for search
+var searchPromise = (param_keywords, param_type) => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.getCollection("direct_message")
-            .find({
-                message_body: {
-                    $regex: `.*${param_keywords}.*`
-                }
-            })
-            .toArray((err, result) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            });
+        var re = new RegExp(`.*${param_keywords}.*`, 'i');
+
+        var query = {
+            $or: [
+                {message: re},
+                {title: re}
+            ],
+            type: param_type
+        };
+        
+        db.collection('messages').find(query).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
     });
 };
 
@@ -105,18 +109,15 @@ var userPromise = param_id => {
 var userthreadPromise = param_username => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
-
-        db.collection("messages")
-            .find({
-                username: param_username,
-                type: "thread"
-            })
-            .toArray((err, result) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(result);
-            });
+        db.collection('messages').find({
+            username: param_username,
+            type: 'thread'
+        }).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
     });
 };
 
