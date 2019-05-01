@@ -42,6 +42,20 @@ li a:hover:not(.active) {
     max-height: 32px;
 }
 
+.container-1 {
+    margin-top: 10px;
+    margin-left: 50px;
+    width: 300px;
+    vertical-align: middle;
+    position: absolute;
+}
+
+#search {
+    border-radius: 3px;
+    padding: 3px;
+}
+
+
 /* ------------------------------------------- LOGIN PAGE ------------------------------------------- */
 
 .login {
@@ -180,6 +194,13 @@ a {
     display: none;
 }
 
+#f_username {
+    text-align: left;
+    display: inline;
+    padding: 0;
+    color: #336680;
+}
+
 /* ------------------------------------------- THREAD PAGE ------------------------------------------- */
 #thread_container {
     width: 80%;
@@ -200,12 +221,23 @@ a {
     float: none;
     padding: 15px;
     margin: 10px;
-    border-bottom: 1px solid black;
 }
 
 #replies_container textarea {
     width: 97%;
     padding: 15px;
+}
+
+/* ------------------------------------------- USER PROFILE ------------------------------------------- */
+#dm_button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+
+    text-decoration: none;
+    color: initial;
+    padding: .5em;
+    font-size: 0.8em;
 }
 
 /* ------------------------------------------- Footer CSS ------------------------------------------- */
