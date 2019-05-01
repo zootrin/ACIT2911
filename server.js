@@ -3,6 +3,7 @@ const port = process.env.PORT || 8080;
 const express = require("express");
 const bodyParser = require("body-parser");
 const hbs = require("hbs");
+const _ = require('lodash');
 
 const utils = require('./utils.js');
 const register = require('./users.js');
@@ -97,14 +98,36 @@ app.get("/", async (request, response) => {
 });
 
 // Search Thread Page
-app.get('/search', async (request, response) => {
-    //TODO: find search keyword to put in here ↓
-    var threads = await promises.searchPromise();
+app.get('/search', async (request, response) => {    
+    if (request.query.keyword == ''){
+        return;
+    }
+
+    var threads = await promises.searchPromise(request.query.keyword, 'thread');
+    var replies = await promises.searchPromise(request.query.keyword, 'reply');
+    
+    var replies_thread_ids = Object.keys(_.groupBy(replies, 'thread_id'));
+
+    var exist_flag = false;
+
+    for(i=0; i<replies_thread_ids.length; i++) {
+        for (j=0; j<replies.length; j++){
+            if (replies[j]._id == replies_thread_ids[i]){
+                exist_flag = true;
+                break;
+            }
+        }
+        if (exist_flag != true ){
+            var queried_thread = await promises.threadPromise(replies_thread_ids[i]);
+            threads.push(queried_thread);
+        }
+        exist_flag = false;
+    }
 
     response.render('forum.hbs', {
         title: 'Search',
-        heading: 'Search',
-        thread: threads
+        heading: `Search: ${request.query.keyword}`,
+        message: threads
     });
 });
 
@@ -146,18 +169,6 @@ app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
 
-    response.render("user.hbs", {
-        title: "My Account",
-        heading: user.username,
-        user_id: user._id,
-        thread: thread
-    });
-});
-
-app.post("/user/:id", async (request, response) => {
-    var user = await promises.userPromise(request.params.id);
-    var thread = await promises.userthreadPromise(user.username);
-    console.log(request.body)
 
     /*
     if (request.body.enable_notifications !== undefined) {
@@ -168,13 +179,11 @@ app.post("/user/:id", async (request, response) => {
     response.render("user.hbs", {
         title: "My Account",
         heading: user.username,
+        user_id: user._id,
         thread: thread
     });
 });
 
-exports.closeServer = function(){
-    server.close();
-  };
 // Send new direct message
 app.get('/new_dm/:id', checkAuthentication, (request, response) => {
     response.render('new_dm.hbs', {
@@ -196,3 +205,8 @@ app.get('/dms', checkAuthentication, async (request, response) => {
         dms: dms
     });
 });
+
+
+exports.closeServer = function () {
+    server.close();
+};
