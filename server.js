@@ -96,6 +96,18 @@ app.get("/", async (request, response) => {
     });
 });
 
+// Search Thread Page
+app.get('/search', async (request, response) => {
+    //TODO: find search keyword to put in here ↓
+    var threads = await promises.searchPromise();
+
+    response.render('forum.hbs', {
+        title: 'Search',
+        heading: 'Search',
+        thread: threads
+    });
+});
+
 // Adding new post
 app.get("/new_post", checkAuthentication, (request, response) => {
     response.render("new_post.hbs", {
@@ -170,5 +182,18 @@ app.get('/new_dm/:id', checkAuthentication, (request, response) => {
         title: 'Direct Message',
         heading: 'Send a direct message',
         recipient_id: request.params.id
+    });
+});
+
+// Logged in user's DMs
+app.get('/dms', checkAuthentication, async (request, response) => {
+    var dms = await promises.dmPromise(request.user._id);
+
+    console.log(dms);
+
+    response.render('dms.hbs', {
+        title: 'DM Inbox',
+        heading: 'Direct Message Inbox',
+        dms: dms
     });
 });

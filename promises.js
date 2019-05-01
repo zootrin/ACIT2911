@@ -20,6 +20,24 @@ var messagePromise = () => {
     });
 };
 
+// Retrieves threads with keywords
+var searchPromise = (param_keywords) => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+        
+        db.getCollection('direct_message').find({
+            "message_body": {
+                $regex: `.*${param_keywords}.*`
+            }
+        }).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
+
 // Retrieves thread details
 var threadPromise = (param_id) => {
     return new Promise((resolve, reject) => {
@@ -135,6 +153,21 @@ var getUserDMs = async param_id => {
     });
 };
 
+// Retrieves a list of all DMs of a user
+var dmPromise = (param_id) => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+
+        db.collection('direct_message').find({
+            recipient: param_id
+        }).toArray((err, result) => {
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        });
+    });
+};
 
 module.exports = {
     messagePromise: messagePromise,
@@ -142,5 +175,7 @@ module.exports = {
     replyPromise: replyPromise,
     userPromise: userPromise,
     userthreadPromise: userthreadPromise,
-    getUserDMs
+    getUserDMs: getUserDMs,
+    dmPromise: dmPromise,
+    searchPromise: searchPromise
 };
