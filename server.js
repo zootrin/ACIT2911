@@ -163,6 +163,7 @@ app.post("/user/:id", async (request, response) => {
 exports.closeServer = function(){
     server.close();
   };
+  
 // Send new direct message
 app.get('/new_dm/:id', checkAuthentication, (request, response) => {
     response.render('new_dm.hbs', {
