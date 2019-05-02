@@ -1,6 +1,6 @@
 const express = require("express");
-var utils = require("./utils");
-const passport = require('passport');
+const pass = require("./passport.js");
+const utils = require("./utils");
 
 var router = express.Router();
 
@@ -59,13 +59,17 @@ function updateUser(request, response) {
 
     let db = utils.getDb();
 
-    db.collection("users").findOneAndUpdate(
-        { _id: request.user._id },
-        {
-            $set: {settings: settings}
-        },
-        (err, result) => {
+    db.collection("users")
+        .findOneAndUpdate(
+            {
+                _id: request.user._id
+            },
+            {
+                $set: { settings: settings }
+            }
+        )
+        .then(() => {
+            console.log(request.session);
             response.redirect(`/user/${request.user._id.toString()}`);
-        }
-    );
+        });
 }

@@ -30,5 +30,8 @@
     "request": "^2.88.0",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^8.8.1"
+  },
+  "devDependencies": {
+    "chai-http": "^4.3.0"
   }
 }
