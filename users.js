@@ -1,5 +1,6 @@
 const express = require("express");
 var utils = require("./utils");
+const passport = require('passport');
 
 var router = express.Router();
 
@@ -59,14 +60,12 @@ function updateUser(request, response) {
     let db = utils.getDb();
 
     db.collection("users").findOneAndUpdate(
-        {
-            _id: request.user._id
-        },
+        { _id: request.user._id },
         {
             $set: {settings: settings}
+        },
+        (err, result) => {
+            response.redirect(`/user/${request.user._id.toString()}`);
         }
-    ).then(
-        
-        response.redirect(`/user/${request.user._id.toString()}`)
     );
-};
+}
