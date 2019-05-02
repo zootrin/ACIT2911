@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{> header}}
+
+<body>
+    {{> menu}}
+
+    <h1>{{heading}}</h1>
+
+    <div id="dm_username_list">
+        <ul class="dm_list">
+            {{#each dm_username}}
+            <li>
+                {{this}}
+                <hr>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    
+
+</body>
+
+{{> footer}}
+
+</html>

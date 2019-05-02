@@ -188,7 +188,6 @@ app.get("/user/:id", async (request, response) => {
     }
 
     if (request.user !== undefined) {
-        console.log(request.user.settings);
         if (request.user._id.toString() === request.params.id) {
             title = "My Account";
             displaySettings = true;
@@ -221,9 +220,6 @@ app.get("/new_dm/:id", checkAuthentication, (request, response) => {
 app.get("/dms", checkAuthentication, async (request, response) => {
     var dms = await promises.dmPromise(request.user._id.toString());
 
-    // TODO: remove console.log?
-    console.log(dms);
-
     // groups array elements into {otherUser_id:[messages]} objects
     let dmsByUsers = _.groupBy(
         dms.map(message => {
@@ -235,13 +231,21 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         "users"
     );
 
-    // TODO: dmsByUsers isn't being used?
-    console.log(dmsByUsers);
+    // gets username of DMs
+    user_id_array = Object.keys(dmsByUsers);
+    username_array = [];
+
+    for (i=0; i<user_id_array.length; i++) {
+        var queried_user = await promises.userPromise(user_id_array[i]);
+
+        username_array.push(queried_user.username);
+    }
 
     response.render("dms.hbs", {
         title: "DM Inbox",
         heading: "Direct Message Inbox",
-        dms: dms
+        dm_username: username_array,
+        dms: dmsByUsers
     });
 });
 
