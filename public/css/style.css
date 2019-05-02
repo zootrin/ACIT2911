@@ -256,7 +256,23 @@ a {
 .footerimg{
     width: 44px;
 }
-
+/* ------------------------------------------ User_Settings CSS -------------------------------------------- */
+form{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    /* background-color: aqua */
+}
+.privacy-settings{
+    grid-column: 1;
+    /* border: 2px solid black;x */
+}
+.privacy-notification{
+    grid-column: 2;
+    /* border: 2px solid black; */
+}
+.privacy-notification #submit{
+    float: right
+}
 
 
 /* ------------------------------------------ User CSS -------------------------------------------- */
@@ -283,7 +299,7 @@ a {
 .content-user{
     grid-area: content;
     background-color: whitesmoke ;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 10px;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
@@ -318,12 +334,12 @@ a {
     grid-area: name;
     float: left;
     display: block;
-    border: 1px solid black;
+    border-bottom: 1px solid black;
     padding: 10px;
 
 }
 .content-name a{
-    float: right
+    float: right;
 }
 .content-name-history{
     float: left;
