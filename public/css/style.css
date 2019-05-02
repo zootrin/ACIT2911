@@ -333,7 +333,10 @@ a {
     padding: 10px;
     overflow: hidden;
     font-size: 15px;
+    overflow-y:scroll;
+    background-color: #E7DDDD;   
 }
+
 .name-checkbox-credentials{
     grid-area: checkbox;
     /* border: 1px solid black; */
