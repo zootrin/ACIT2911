@@ -30,8 +30,10 @@ function add_dm(request, response) {
     var db = utils.getDb();
     var ObjectId = utils.getObjectId();
 
+    console.log(request.user._id.toString())
+
     // generates ID-like for querying
-    let users = [sender, ObjectID(recipient)].sort()
+    let users = [request.user._id.toString(), recipient].sort()
 
     db.collection('direct_message').insertOne({
         message_body: message_body,
