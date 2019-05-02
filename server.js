@@ -166,6 +166,13 @@ app.get("/thread/:id", async (request, response) => {
     });
 });
 
+hbs.registerHelper("setChecked", state => {
+    if (state) {
+        return "checked"
+    }
+    return ""
+});
+
 // Dynamically generated endpoint for user profiles
 app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
