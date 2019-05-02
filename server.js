@@ -204,10 +204,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                if (user !== request.user._id.toString()) {
-                    return true;
-                }
-                return false;
+                return (user !== request.user._id.toString())
             })[0];
             return message;
         }),
