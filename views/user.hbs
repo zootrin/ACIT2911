@@ -2,26 +2,42 @@
 <html lang="en">
 
 {{> header}}
-
+<link rel="stylesheet" href="..\public\css\style.css">
 <body>
-    {{> menu}}
+    <div class="container-user">
+        <div class="content-header">
+            {{> menu}}
+        </div>
+        <div class="content-user">
+            <div class="content-name">
+                <h1>{{heading}}</h1>
+                <a href="/new_dm/{{user_id}}" id="dm_button">Send Message</a>
+            </div>
 
-    <h1>{{heading}}</h1>
+            <div class="content-name-history">
+                <h2>Post History</h2>
+                <div id='user_threads'>
+                    {{#each thread}}
+                    <p>{{title}}</p>
+                    <br>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="name-checkbox-credentials">
+                {{> user_settings}}
+            </div>
+        </div>
 
-    <a href="/new_dm/{{user_id}}" id="dm_button">Send Message</a>
-
-    <h2>Post History</h2>
-    <div id='user_threads'>
-        {{#each thread}}
-            <p>{{title}}</p>
-            <br>
-        {{/each}}
+        
+        <div class="content-footer">
+        {{> footer}}
+        </div>
+        <div class="content-sidebar1"></div>
+        <div class="content-sidebar2"></div>
     </div>
-    {{> user_settings}}
-    
 </body>
 
-{{> footer}}
+
 <script src="/js/script.js"></script>
 <script src="../gen_notifs.js"></script>
 
