@@ -4,6 +4,7 @@ var utils = require("./utils");
 var router = express.Router();
 
 router.post("/saveUser", saveUser);
+router.post("/updateUser", updateUser);
 
 module.exports = router;
 
@@ -47,3 +48,24 @@ function saveUser(request, response) {
             }
         });
 }
+
+function updateUser(request, response) {
+    let settings = {
+        showEmail: Boolean(request.body.showEmail),
+        showName: Boolean(request.body.showName),
+        enableNotifs: Boolean(request.body.enableNotifs)
+    };
+
+    let db = utils.getDb();
+
+    db.collection("users").findOneAndUpdate(
+        {
+            _id: request.user._id
+        },
+        {
+            $set: {settings: settings}
+        }
+    ).then(
+        response.redirect(`/user/${request.user._id.toString()}`)
+    );
+};

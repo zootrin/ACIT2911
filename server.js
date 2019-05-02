@@ -179,7 +179,8 @@ app.get("/user/:id", async (request, response) => {
         if (request.user._id.toString() === request.params.id) {
             title = "My Account";
             displaySettings = true;
-            userSettings = request.user.settings;
+            let updatedUser = await promises.userPromise(request.user._id);
+            userSettings = updatedUser.settings;
         }
     }
 
@@ -191,12 +192,6 @@ app.get("/user/:id", async (request, response) => {
         displaySettings: displaySettings,
         userSettings: userSettings
     });
-
-    /*
-    if (request.body.enable_notifications !== undefined) {
-        notifs.getPermission()
-    }
-    */
 });
 
 // Send new direct message
