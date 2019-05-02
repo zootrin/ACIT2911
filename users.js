@@ -66,6 +66,7 @@ function updateUser(request, response) {
             $set: {settings: settings}
         }
     ).then(
+        
         response.redirect(`/user/${request.user._id.toString()}`)
     );
 };
