@@ -172,28 +172,31 @@ app.get("/user/:id", async (request, response) => {
     var thread = await promises.userthreadPromise(user.username);
     let title = `${user.username}'s profile`;
     let displaySettings = false;
-
-    //console.log(request);
+    let userSettings;
 
     if (request.user !== undefined) {
+        console.log(request.user.settings);
         if (request.user._id.toString() === request.params.id) {
-            (title = "My Account"), (displaySettings = true);
+            title = "My Account";
+            displaySettings = true;
+            userSettings = request.user.settings;
         }
     }
-
-    /*
-    if (request.body.enable_notifications !== undefined) {
-        notifs.getPermission()
-    }
-    */
 
     response.render("user.hbs", {
         title: title,
         heading: user.username,
         user_id: user._id,
         thread: thread,
-        displaySettings: displaySettings
+        displaySettings: displaySettings,
+        userSettings: userSettings
     });
+
+    /*
+    if (request.body.enable_notifications !== undefined) {
+        notifs.getPermission()
+    }
+    */
 });
 
 // Send new direct message
