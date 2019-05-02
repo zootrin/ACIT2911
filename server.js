@@ -166,6 +166,7 @@ app.get("/thread/:id", async (request, response) => {
     });
 });
 
+//sets checkbox state on settings partial
 hbs.registerHelper("setChecked", state => {
     if (state) {
         return "checked"
