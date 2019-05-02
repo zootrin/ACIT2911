@@ -166,13 +166,26 @@ app.get("/thread/:id", async (request, response) => {
     });
 });
 
+//sets checkbox state on settings partial
+hbs.registerHelper("setChecked", state => {
+    if (state) {
+        return "checked";
+    }
+    return "";
+});
+
 // Dynamically generated endpoint for user profiles
 app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
     let title = `${user.username}'s profile`;
     let displaySettings = false;
+    let email = "Hidden by user";
     let userSettings;
+
+    if (user.settings.showEmail) {
+        email = `${user.email}`;
+    }
 
     if (request.user !== undefined) {
         console.log(request.user.settings);
@@ -189,6 +202,7 @@ app.get("/user/:id", async (request, response) => {
         heading: user.username,
         user_id: user._id,
         thread: thread,
+        email: email,
         displaySettings: displaySettings,
         userSettings: userSettings
     });
@@ -214,7 +228,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                return user !== request.user._id.toString();
+                return (user !== request.user._id.toString());
             })[0];
             return message;
         }),
@@ -234,3 +248,5 @@ app.get("/dms", checkAuthentication, async (request, response) => {
 exports.closeServer = function() {
     server.close();
 };
+
+module.exports = server;
