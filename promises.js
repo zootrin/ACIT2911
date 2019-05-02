@@ -1,26 +1,56 @@
 const utils = require('./utils.js');
+const _ = require("lodash");
 
-// Populates message board page with the titles of each 
+// Populates message board page with the titles of each
 // message in the database
 var messagePromise = () => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.collection('messages').find({
-            type: 'thread'
-        }, {
-            _id: 0
-        }).toArray((err, result) => {
+        db.collection("messages")
+            .find(
+                {
+                    type: "thread"
+                },
+                {
+                    _id: 0
+                }
+            )
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result.reverse());
+            });
+    });
+};
+
+// Retrieves threads/replies with keywords for search
+var searchPromise = (param_keywords, param_type) => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+
+        var re = new RegExp(`.*${param_keywords}.*`, 'i');
+
+        var query = {
+            $or: [
+                {message: re},
+                {title: re}
+            ],
+            type: param_type
+        };
+        
+        db.collection('messages').find(query).toArray((err, result) => {
             if (err) {
                 reject(err);
             }
-            resolve(result.reverse());
+            resolve(result);
         });
     });
 };
 
 // Retrieves thread details
-var threadPromise = (param_id) => {
+var threadPromise = param_id => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
         var ObjectId = utils.getObjectId();
@@ -29,7 +59,7 @@ var threadPromise = (param_id) => {
             _id: ObjectId(param_id)
         };
 
-        db.collection('messages').findOne(query, (err, result) => {
+        db.collection("messages").findOne(query, (err, result) => {
             if (err) {
                 reject(err);
             }
@@ -39,24 +69,26 @@ var threadPromise = (param_id) => {
 };
 
 // Retrieves all replies of a thread
-var replyPromise = (param_id) => {
-    return new Promise ((resolve, reject) => {
+var replyPromise = param_id => {
+    return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        db.collection('messages').find({
-            thread_id: param_id
-        }).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
+        db.collection("messages")
+            .find({
+                thread_id: param_id
+            })
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
     });
 };
 
 // Retrieves user details
-var userPromise = (param_id) => {
-    return new Promise ((resolve, reject) => {
+var userPromise = param_id => {
+    return new Promise((resolve, reject) => {
         var db = utils.getDb();
         var ObjectId = utils.getObjectId();
 
@@ -64,7 +96,7 @@ var userPromise = (param_id) => {
             _id: ObjectId(param_id)
         };
 
-        db.collection('users').findOne(query, (err, result) => {
+        db.collection("users").findOne(query, (err, result) => {
             if (err) {
                 reject(err);
             }
@@ -74,10 +106,9 @@ var userPromise = (param_id) => {
 };
 
 // Retrieves all threads of a user
-var userthreadPromise = (param_username) => {
+var userthreadPromise = param_username => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
-
         db.collection('messages').find({
             username: param_username,
             type: 'thread'
@@ -90,10 +121,33 @@ var userthreadPromise = (param_username) => {
     });
 };
 
+// Retrieves a list of all DMs of a user
+var dmPromise = param_id => {
+    return new Promise((resolve, reject) => {
+        var db = utils.getDb();
+
+        db.collection("direct_message")
+            .find({
+                // finds messages where user_id in users
+                users: {
+                    $in: [param_id]
+                }
+            })
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
+    });
+};
+
 module.exports = {
     messagePromise: messagePromise,
     threadPromise: threadPromise,
     replyPromise: replyPromise,
     userPromise: userPromise,
-    userthreadPromise: userthreadPromise
+    userthreadPromise: userthreadPromise,
+    dmPromise: dmPromise,
+    searchPromise: searchPromise
 };

@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{{> header}}
+    {{> header}}
 
-<body>
-    {{> menu}}
+    <body>
+        {{> menu}}
 
-    <h1>{{heading}}</h1>
+        <h1>{{heading}}</h1>
 
-    <a href="/new_dm/{{user_id}}" id="dm_button">Send Message</a>
+        <a href="/new_dm/{{user_id}}" id="dm_button">Send Message</a>
 
-    <h2>Post History</h2>
-    <div id='user_threads'>
-        {{#each thread}}
-            <p>{{title}}</p>
-            <br>
-        {{/each}}
-    </div>
-    
-</body>
+        <h2>Post History</h2>
+        <div id='user_threads'>
+            {{#each thread}}
+                <p>{{title}}</p>
+                <br>
+            {{/each}}
+        </div>
 
-{{> footer}}
-<script src="js/script.js"></script>
+        {{#if displaySettings}}
+            {{> user_settings}}
+        {{/if}}
+
+    </body>
+
+    {{> footer}}
+    <script src="/js/script.js"></script>
 
 </html>
