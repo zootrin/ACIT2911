@@ -198,6 +198,7 @@ app.get("/new_dm/:id", checkAuthentication, (request, response) => {
 app.get("/dms", checkAuthentication, async (request, response) => {
     var dms = await promises.dmPromise(request.user._id.toString());
 
+    // TODO: remove console.log?
     console.log(dms);
 
     // groups array elements into {otherUser_id:[messages]} objects
@@ -214,6 +215,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         "users"
     );
 
+    // TODO: dmsByUsers isn't being used?
     console.log(dmsByUsers);
 
     response.render("dms.hbs", {
