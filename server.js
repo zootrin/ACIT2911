@@ -3,14 +3,14 @@ const port = process.env.PORT || 8080;
 const express = require("express");
 const bodyParser = require("body-parser");
 const hbs = require("hbs");
-const _ = require('lodash');
+const _ = require("lodash");
 
-const utils = require('./utils.js');
-const register = require('./users.js');
-const pass = require('./passport.js');
-const forum = require('./forum.js');
-const promises = require('./promises.js');
-const dms = require('./messaging.js');
+const utils = require("./utils.js");
+const register = require("./users.js");
+const pass = require("./passport.js");
+const forum = require("./forum.js");
+const promises = require("./promises.js");
+const dms = require("./messaging.js");
 
 const app = express();
 
@@ -98,34 +98,36 @@ app.get("/", async (request, response) => {
 });
 
 // Search Thread Page
-app.get('/search', async (request, response) => {    
-    if (request.query.keyword == ''){
+app.get("/search", async (request, response) => {
+    if (request.query.keyword == "") {
         return;
     }
 
-    var threads = await promises.searchPromise(request.query.keyword, 'thread');
-    var replies = await promises.searchPromise(request.query.keyword, 'reply');
-    
-    var replies_thread_ids = Object.keys(_.groupBy(replies, 'thread_id'));
+    var threads = await promises.searchPromise(request.query.keyword, "thread");
+    var replies = await promises.searchPromise(request.query.keyword, "reply");
+
+    var replies_thread_ids = Object.keys(_.groupBy(replies, "thread_id"));
 
     var exist_flag = false;
 
-    for(i=0; i<replies_thread_ids.length; i++) {
-        for (j=0; j<replies.length; j++){
-            if (replies[j]._id == replies_thread_ids[i]){
+    for (i = 0; i < replies_thread_ids.length; i++) {
+        for (j = 0; j < replies.length; j++) {
+            if (replies[j]._id == replies_thread_ids[i]) {
                 exist_flag = true;
                 break;
             }
         }
-        if (exist_flag != true ){
-            var queried_thread = await promises.threadPromise(replies_thread_ids[i]);
+        if (exist_flag != true) {
+            var queried_thread = await promises.threadPromise(
+                replies_thread_ids[i]
+            );
             threads.push(queried_thread);
         }
         exist_flag = false;
     }
 
-    response.render('forum.hbs', {
-        title: 'Search',
+    response.render("forum.hbs", {
+        title: "Search",
         heading: `Search: ${request.query.keyword}`,
         message: threads
     });
@@ -169,7 +171,6 @@ app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
 
-
     /*
     if (request.body.enable_notifications !== undefined) {
         notifs.getPermission()
@@ -184,31 +185,44 @@ app.get("/user/:id", async (request, response) => {
     });
 });
 
-
 // Send new direct message
-app.get('/new_dm/:id', checkAuthentication, (request, response) => {
-    response.render('new_dm.hbs', {
-        title: 'Direct Message',
-        heading: 'Send a direct message',
+app.get("/new_dm/:id", checkAuthentication, (request, response) => {
+    response.render("new_dm.hbs", {
+        title: "Direct Message",
+        heading: "Send a direct message",
         recipient_id: request.params.id
     });
 });
 
-
 // Logged in user's DMs
-app.get('/dms', checkAuthentication, async (request, response) => {
-    var dms = await promises.dmPromise(request.user._id);
+app.get("/dms", checkAuthentication, async (request, response) => {
+    var dms = await promises.dmPromise(request.user._id.toString());
 
     console.log(dms);
 
-    response.render('dms.hbs', {
-        title: 'DM Inbox',
-        heading: 'Direct Message Inbox',
+    // groups array elements into {otherUser_id:[messages]} objects
+    let dmsByUsers = _.groupBy(
+        dms.map(message => {
+            message.users = message.users.filter(user => {
+                if (user !== request.user._id.toString()) {
+                    return true;
+                }
+                return false;
+            })[0];
+            return message;
+        }),
+        "users"
+    );
+
+    console.log(dmsByUsers);
+
+    response.render("dms.hbs", {
+        title: "DM Inbox",
+        heading: "Direct Message Inbox",
         dms: dms
     });
 });
 
-
-exports.closeServer = function () {
+exports.closeServer = function() {
     server.close();
 };

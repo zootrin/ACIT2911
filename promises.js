@@ -137,18 +137,7 @@ var dmPromise = param_id => {
                 if (err) {
                     reject(err);
                 }
-
-                // groups array elements into {otherUser_id:[messages]} objects
-                let dmsByUsers = _.groupBy(
-                    result.map(message => {
-                        message.users = message.users.filter(user => {
-                            user !== param_id;
-                        });
-                    }),
-                    "users"
-                );
-
-                resolve(dmsByUsers);
+                resolve(result);
             });
     });
 };
