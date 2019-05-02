@@ -21,8 +21,9 @@
         <ul class="message_list">
             {{#each message}}
                 <li><a href="/thread/{{_id}}">{{title}}</a>
-                <p class="poster">Posted by: {{username}} on {{date}}</p>
-                <hr></li>
+                <p class="poster">Posted by: <a href="/user/{{user_id}}" id="f_username">{{username}}</a> on {{date}}</p>
+                <hr>
+                </li>
             {{/each}}
         </ul>
     </div>
