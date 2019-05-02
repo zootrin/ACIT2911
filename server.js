@@ -170,18 +170,27 @@ app.get("/thread/:id", async (request, response) => {
 app.get("/user/:id", async (request, response) => {
     var user = await promises.userPromise(request.params.id);
     var thread = await promises.userthreadPromise(user.username);
+    let title = `${user.username}'s profile`;
+    let displaySettings = false;
+    let userSettings;
 
-    /*
-    if (request.body.enable_notifications !== undefined) {
-        notifs.getPermission()
+    if (request.user !== undefined) {
+        console.log(request.user.settings);
+        if (request.user._id.toString() === request.params.id) {
+            title = "My Account";
+            displaySettings = true;
+            let updatedUser = await promises.userPromise(request.user._id);
+            userSettings = updatedUser.settings;
+        }
     }
-    */
 
     response.render("user.hbs", {
-        title: "My Account",
+        title: title,
         heading: user.username,
         user_id: user._id,
-        thread: thread
+        thread: thread,
+        displaySettings: displaySettings,
+        userSettings: userSettings
     });
 });
 
@@ -205,10 +214,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                if (user !== request.user._id.toString()) {
-                    return true;
-                }
-                return false;
+                return user !== request.user._id.toString();
             })[0];
             return message;
         }),
