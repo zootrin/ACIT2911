@@ -226,3 +226,5 @@ app.get("/dms", checkAuthentication, async (request, response) => {
 exports.closeServer = function() {
     server.close();
 };
+
+module.exports = server;
