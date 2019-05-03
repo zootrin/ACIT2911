@@ -46,8 +46,3 @@ function registration_alert() {
     }
 }
 
-function show_edit_form() {
-    var form = document.getElementById('edit_post_form');
-
-    form.style.display="block";
-}
