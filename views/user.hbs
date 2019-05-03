@@ -10,11 +10,11 @@
                 {{> menu}}
             </div>
             <div style="display: flex">
-                <div style="display: inline-block; width:20vw"></div>
-                <div style="display: flex; flex-direction:column; width:60vw">
-                    <div style="display: flex; justify-content:space-between">
+                <div style="display: inline-block; width:15vw"></div>
+                <div style="display: flex; flex-direction:column; width:70vw">
+                    <div style="display: flex; justify-content:space-between;">
                         <div
-                            style="display: flex; align-items:flex-end; font-size:3em; font-weight: bold; margin-top: 0.67em;">
+                            style="display: flex; align-items:flex-end; font-size:3em; font-weight: bold; margin-top: 0.33em;">
                             {{heading}}</div>
                         <form style="display: flex; align-items:flex-end; margin-bottom: 0.33em;">
                             <button class="button" type="submit"
@@ -23,22 +23,32 @@
                                 Message</button>
                         </form>
                     </div>
+                    <div class="lineSpacer"></div>
 
                     <div>
-                        <h2>Post History</h2>
-                        <div style="background-color: lightgrey; border-radius:4px" id='user_threads'>
+                        <div
+                            style="display: flex; align-items:flex-end; font-size:1.5em; margin-top: 0.67em; margin-bottom:0.33em">
+                            Post History</div>
+                        <form style="background-color: lightgrey; border-radius:4px; max-height:45vh; overflow-y:auto; display:block"
+                            id='user_threads'>
                             {{#each thread}}
-                                <p>{{title}}</p>
-
-                                <br>
+                                <button class="threadButton" formaction="/thread/{{_id}}">
+                                    <div>
+                                        {{title}}
+                                    </div>
+                                    <div>
+                                        Posted {{date}}
+                                    </div>
+                                    <div class="lineSpacer"></div>
                             {{/each}}
-                        </div>
+                        </form>
                     </div>
 
-                    <div style="display: flex, justify-content: flex-start">
-                        <h2 style="display: inline-block">Email:</h2>
-                        <span>{{email}}</span>
+                    <div style="display: flex, justify-content: flex-start; height:2vh; margin-top: 0.33em; margin-bottom:1.5em">
+                        <span style="font-size:1.5em;">Email:</span>
+                        <span style="font-size:1em">{{email}}</span>
                     </div>
+                    <div style="height:0.5em"> </div>
 
                     {{#if displaySettings}}
                         <div>
@@ -47,7 +57,7 @@
                     {{/if}}
 
                 </div>
-                <div style="display: inline-block; width:20vw"></div>
+                <div style="display: inline-block; width:15vw"></div>
             </div>
 
             {{> footer}}
