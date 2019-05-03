@@ -350,6 +350,17 @@ form {
 }
 
 /* ------------------------------------------ User CSS -------------------------------------------- */
+.button {
+    background-color: #333;
+    border-color: #333;
+    border: none;
+    border-radius: 2px;
+    color: white;
+}
+
+.button:active {
+    background-color: #5cb8e6;
+}
 
 .container-user {
     width: 100%;

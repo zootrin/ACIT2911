@@ -9,34 +9,45 @@
             <div>
                 {{> menu}}
             </div>
-            <div>
-                <div>
-                    <h1 style="display: inline-block">{{heading}}</h1>
-                    <a style="display: inline-block; text-align:center" href="/new_dm/{{user_id}}" id="dm_button">Send
-                        Message</a>
-                </div>
-
-                <div class="content-name-history">
-                    <h2>Post History</h2>
-                    <div id='user_threads'>
-                        {{#each thread}}
-                            <p>{{title}}</p>
-                            <br>
-                        {{/each}}
+            <div style="display: flex">
+                <div style="display: inline-block; width:20vw"></div>
+                <div style="display: flex; flex-direction:column; width:60vw">
+                    <div style="display: flex; justify-content:space-between">
+                        <div
+                            style="display: flex; align-items:flex-end; font-size:3em; font-weight: bold; margin-top: 0.67em;">
+                            {{heading}}</div>
+                        <form style="display: flex; align-items:flex-end; margin-bottom: 0.33em;">
+                            <button class="button" type="submit"
+                                style="display: inline; text-align:center; color: white"
+                                formaction="/new_dm/{{user_id}}" id="dm_button">Send
+                                Message</button>
+                        </form>
                     </div>
-                </div>
 
-                <div style="display: flex, justify-content: flex-start">
-                    <h2 style="display: inline-block">Email:</h2>
-                    <span>{{email}}</span>
-                </div>
-
-                {{#if displaySettings}}
                     <div>
-                        {{> user_settings}}
-                    </div>
-                {{/if}}
+                        <h2>Post History</h2>
+                        <div style="background-color: lightgrey; border-radius:4px" id='user_threads'>
+                            {{#each thread}}
+                                <p>{{title}}</p>
 
+                                <br>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <div style="display: flex, justify-content: flex-start">
+                        <h2 style="display: inline-block">Email:</h2>
+                        <span>{{email}}</span>
+                    </div>
+
+                    {{#if displaySettings}}
+                        <div>
+                            {{> user_settings}}
+                        </div>
+                    {{/if}}
+
+                </div>
+                <div style="display: inline-block; width:20vw"></div>
             </div>
 
             {{> footer}}
