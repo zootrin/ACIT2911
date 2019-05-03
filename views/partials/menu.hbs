@@ -13,7 +13,6 @@
 
         {{#if isAuthenticated}}
             <li class="login"><a class="active" href="/logout">Logout</a></li>
-            <li class="login"><a class="my_account" href="/user/{{user._id}}">My Profile</a></li>   
             <li class="login"><a class="inbox" href="/dms"><img src="/images/inbox.png" class="inbox_icon"></a></li>
             <li class="login"><p class="username">Welcome, {{user.username}}</p></li>
         {{else}}
