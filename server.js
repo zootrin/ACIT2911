@@ -41,6 +41,10 @@ hbs.registerHelper("year", () => {
     return new Date().getFullYear();
 });
 
+hbs.registerHelper("populate", (dms, user_id) => {
+    return dms[user_id];
+});
+
 app.use(pass);
 app.use(register);
 app.use(forum);
@@ -183,6 +187,10 @@ app.get("/user/:id", async (request, response) => {
     let email = "Hidden by user";
     let userSettings;
 
+    for (let message of thread) {
+        message.date = String(message.date).split(" ")[0];
+    }
+
     if (user.settings.showEmail) {
         email = `${user.email}`;
     }
@@ -196,6 +204,8 @@ app.get("/user/:id", async (request, response) => {
         }
     }
 
+    var isUser = request.params.id == request.user._id ? true : false;
+
     response.render("user.hbs", {
         title: title,
         heading: user.username,
@@ -203,7 +213,8 @@ app.get("/user/:id", async (request, response) => {
         thread: thread,
         email: email,
         displaySettings: displaySettings,
-        userSettings: userSettings
+        userSettings: userSettings,
+        isUser: isUser
     });
 });
 
@@ -224,7 +235,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                return (user !== request.user._id.toString());
+                return user !== request.user._id.toString();
             })[0];
             return message;
         }),
@@ -233,20 +244,46 @@ app.get("/dms", checkAuthentication, async (request, response) => {
 
     // gets username of DMs
     user_id_array = Object.keys(dmsByUsers);
-    username_array = [];
+    user_array = [];
 
-    for (i=0; i<user_id_array.length; i++) {
+    for (i = 0; i < user_id_array.length; i++) {
         var queried_user = await promises.userPromise(user_id_array[i]);
 
-        username_array.push(queried_user.username);
+        user_array.push({
+            id: user_id_array[i],
+            username: queried_user.username
+        });
     }
 
     response.render("dms.hbs", {
         title: "DM Inbox",
         heading: "Direct Message Inbox",
-        dm_username: username_array,
+        dm_id: user_id_array,
+        dm_users: user_array,
         dms: dmsByUsers
     });
+});
+
+app.get("/dms/:id", checkAuthentication, async (request, response) => {
+    var dms = await promises.dmPromise(request.user._id.toString());
+    var username = await promises.userPromise(request.params.id);
+
+    // groups array elements into {otherUser_id:[messages]} objects
+    let dmsByUsers = _.groupBy(
+        dms.map(message => {
+            message.users = message.users.filter(user => {
+                return user !== request.user._id.toString();
+            })[0];
+            return message;
+        }),
+        "users"
+    );
+
+    response.render("dm_messages.hbs", {
+        heading: username.username,
+        dms: dmsByUsers[request.params.id],
+        dmers_id: request.params.id
+    }); 
 });
 
 exports.closeServer = function() {
