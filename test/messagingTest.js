@@ -1,17 +1,13 @@
 const chai = require('chai');
-const expect = chai.expect;
+const server = require('../server');
+const chaiHttp = require('chai-http');
+var should = chai.should();
 const messages = require('../messaging');
 
-describe('Messaging', function() {
-    beforeEach(function () {
-        MockDate.set('5/2/2019');
-        this.message = [
-            {items: 1, timestamp: '2019-05-2T04:55:04.255892'
-        },
-        ];
-    });
+describe('get_date', function() {
+    it("should get the date");
+});
 
-    afterEach(function() {
-        MockDate.reset();
-    });
+describe("add_dm", function() {
+    it("should add a direct message to database");
 });
