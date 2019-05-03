@@ -4,8 +4,8 @@
     <form name="settings" id="settings" action="/updateUser" method="POST">
         <h4>Privacy</h4>
         <div>
-            <input type="checkbox" name="showEmail" id="showEmail" {{{setChecked userSettings.showEmail}}} value=1><label
-                for="showEmail">Show email</label>
+            <input type="checkbox" name="showEmail" id="showEmail" {{{setChecked userSettings.showEmail}}}
+                value=1><label for="showEmail">Show email</label>
         </div>
         <div>
             <input type="checkbox" name="showName" id="showName" {{{setChecked userSettings.showName}}} value=1><label
@@ -14,13 +14,8 @@
         <div class="privacy-notification">
             <h4>Notifications</h4>
             <div>
-                <input type="checkbox" name="enable_notifications" id="enable_notifs" value="1"><label for="enable_notifs">Enable notifications</label>
+                <input type="checkbox" name="enableNotifs" id="enableNotifs" {{{setChecked userSettings.enableNotifs}}} value=1><label for="enableNotifs">Enable notifications</label>
             </div>
-
-        <h4>Notifications</h4>
-        <div>
-            <input type="checkbox" name="enableNotifs" id="enableNotifs" {{{setChecked userSettings.enableNotifs}}} value=1><label
-                for="enableNotifs">Enable notifications</label>
         </div>
         <button type="submit">Confirm Settings</button>
     </form>
