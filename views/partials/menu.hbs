@@ -5,19 +5,23 @@
 
             <div>
                 <form method="get" action="/search" style="display: flex; align-items:center;">
-                    <input type="search" name="keyword" id="search" placeholder="Search..." style="width:18vw; margin-left:0.5vw;" required="true">
-                    <input class="button" type="submit" value="Go" style="width:2.5em; height:1.85em; margin-left:5px;"></input>
+                    <input type="search" name="keyword" id="search" placeholder="Search..."
+                        style="width:18vw; margin-left:0.5vw;" required="true">
+                    <input class="button" type="submit" value="Go"
+                        style="width:2.5em; height:1.85em; margin-left:5px;"></input>
                 </form>
             </div>
         </div>
 
-        {{#if isAuthenticated}}
-            <li class="login"><a class="active" href="/logout">Logout</a></li>
-            <li class="login"><a class="inbox" href="/dms"><img src="/images/inbox.png" class="inbox_icon"></a></li>
-            <li class="login"><p class="username">Welcome, {{user.username}}</p></li>
-        {{else}}
-            <li class="login"><a class="active" href="/login">Login</a></li>
-            <li class="login"><a href="/registration">Register</a></li>
-        {{/if}}
+        <div>
+            {{#if isAuthenticated}}
+                <li class="login"><a class="active" href="/logout">Logout</a></li>
+                <li class="login"><a class="inbox" href="/dms"><img src="/images/inbox.png" class="inbox_icon"></a></li>
+                <li class="login"><a class="username" href="/user/{{user._id}}">Welcome, {{user.username}}</a></li>
+            {{else}}
+                <li class="login"><a class="active" href="/login">Login</a></li>
+                <li class="login"><a href="/registration">Register</a></li>
+            {{/if}}
+        </div>
     </ul>
 </div>

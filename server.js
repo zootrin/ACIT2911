@@ -204,7 +204,7 @@ app.get("/user/:id", async (request, response) => {
         }
     }
 
-    var isUser = request.params.id == request.user._id ? true : false;
+    // var isUser = request.params.id == request.user._id ? true : false;
 
     response.render("user.hbs", {
         title: title,
@@ -214,7 +214,6 @@ app.get("/user/:id", async (request, response) => {
         email: email,
         displaySettings: displaySettings,
         userSettings: userSettings,
-        isUser: isUser
     });
 });
 
