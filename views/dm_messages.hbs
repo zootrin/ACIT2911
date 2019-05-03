@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{> header}}
+
+<body>
+    <div id="dm_message_container">
+        <h1>{{heading}}</h1>
+
+        <ul class="dm_list">
+            {{#each dms}}
+            <li>
+                {{message_body}}
+                <p class="dm_send_date">{{send_date}}</p>
+                <hr>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    
+</body>
+
+
+</html>
