@@ -116,7 +116,6 @@ input[type="password"]:focus {
     box-shadow: none;
 }
 
-/* TODO: FIX COLOURSSSS */
 .diff_pw {
     border: 1px solid red;
     box-shadow: 0 0 0 1px red;
@@ -234,7 +233,7 @@ a {
 }
 
 /* ------------------------------------------- USER PROFILE ------------------------------------------- */
-#dm_button {
+.dm_button {
     -webkit-appearance: button;
     -moz-appearance: button;
     appearance: button;
@@ -274,7 +273,6 @@ a {
 #dm_username_list {
     height: 70%;
     width: 25%;
-    position: fixed;
     z-index: 1;
     top: 15%;
     overflow-x: hidden;
@@ -305,7 +303,7 @@ a {
 }
 
 #dm_view_container {
-    width: 80%;
+    width: 90%;
     margin: auto;
     padding: 16px;
 }
