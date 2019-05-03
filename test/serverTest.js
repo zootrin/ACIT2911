@@ -27,7 +27,7 @@ describe('Testing Page Render', function(done) {
     // Logout Page
     it('Logout test', function() {
         chai.request('http://localhost:8080/logout')
-            .get('/ ')
+            .get('/logout')
             .end(function(err, res){
                 res.should.have.status(200);
                 done();
