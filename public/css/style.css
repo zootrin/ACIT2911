@@ -42,6 +42,14 @@ li a:hover:not(.active) {
     max-height: 32px;
 }
 
+.inbox_icon {
+    max-height: 28px;
+}
+
+.inbox {
+    padding: 7px;
+}
+
 .container-1 {
     margin-top: 10px;
     margin-left: 50px;
@@ -239,6 +247,78 @@ a {
     padding: .5em;
     font-size: 0.8em;
 }
+
+/* ------------------------------------------- DM PAGE ------------------------------------------- */
+.dm_list {
+    background-color: white;
+}
+
+.dm_list>li {
+    float: none;
+    padding: 15px 15px 0 15px;
+    margin: 10px;
+}
+
+.dm_list>li a {
+    color: black;
+    text-align: left;
+}
+
+.dm_list>li a:hover {
+    background-color: white;
+    color: #336680;
+    font-weight: bold;
+}
+
+.dm_list>p {
+    margin: auto;
+}
+
+#dm_username_list {
+    height: 70%;
+    width: 25%;
+    position: fixed;
+    z-index: 1;
+    top: 15%;
+    overflow-x: hidden;
+    padding-top: 20px;
+    left: 0;
+}
+
+#dm_message_list {
+    height: 70%;
+    width: 70%;
+    position: fixed;
+    z-index: 1;
+    top: 15%;
+    overflow-x: hidden;
+    padding-top: 20px;
+    right: 0;
+}
+
+#dm_messages {
+    width: 90%;
+    height: 90%
+}
+
+#dm_message_container {
+    width: 80%;
+    margin: auto;
+    padding: 16px;
+}
+
+#dm_view_container {
+    width: 80%;
+    margin: auto;
+    padding: 16px;
+}
+
+.dm_send_date {
+    float: right;
+    font-size: .8em;
+}
+
+
 
 /* ------------------------------------------- Footer CSS ------------------------------------------- */
 .mainfoot {

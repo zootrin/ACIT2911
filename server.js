@@ -41,6 +41,11 @@ hbs.registerHelper("year", () => {
     return new Date().getFullYear();
 });
 
+hbs.registerHelper("populate", (dms, user_id) => {
+    
+    return dms[user_id];
+})
+
 app.use(pass);
 app.use(register);
 app.use(forum);
@@ -188,7 +193,6 @@ app.get("/user/:id", async (request, response) => {
     }
 
     if (request.user !== undefined) {
-        console.log(request.user.settings);
         if (request.user._id.toString() === request.params.id) {
             title = "My Account";
             displaySettings = true;
@@ -221,8 +225,39 @@ app.get("/new_dm/:id", checkAuthentication, (request, response) => {
 app.get("/dms", checkAuthentication, async (request, response) => {
     var dms = await promises.dmPromise(request.user._id.toString());
 
-    // TODO: remove console.log?
-    console.log(dms);
+    // groups array elements into {otherUser_id:[messages]} objects
+    let dmsByUsers = _.groupBy(
+        dms.map(message => {
+            message.users = message.users.filter(user => {
+                return (user !== request.user._id.toString());
+            })[0];
+            return message;
+        }),
+        "users"
+    );
+
+    // gets username of DMs
+    user_id_array = Object.keys(dmsByUsers);
+    user_array = [];
+
+    for (i=0; i<user_id_array.length; i++) {
+        var queried_user = await promises.userPromise(user_id_array[i]);
+
+        user_array.push({id: user_id_array[i], username: queried_user.username});
+    }
+
+    response.render("dms.hbs", {
+        title: "DM Inbox",
+        heading: "Direct Message Inbox",
+        dm_id: user_id_array,
+        dm_users: user_array,
+        dms: dmsByUsers
+    });
+});
+
+app.get("/dms/:id", checkAuthentication, async (request, response) => {
+    var dms = await promises.dmPromise(request.user._id.toString());
+    var username = await promises.userPromise(request.params.id);
 
     // groups array elements into {otherUser_id:[messages]} objects
     let dmsByUsers = _.groupBy(
@@ -235,14 +270,13 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         "users"
     );
 
-    // TODO: dmsByUsers isn't being used?
-    console.log(dmsByUsers);
+    console.log(dmsByUsers[request.params.id]);
+    
 
-    response.render("dms.hbs", {
-        title: "DM Inbox",
-        heading: "Direct Message Inbox",
-        dms: dms
-    });
+    response.render("dm_messages.hbs", {
+        heading: username.username,
+        dms: dmsByUsers[request.params.id]
+    }); 
 });
 
 exports.closeServer = function() {
