@@ -24,7 +24,9 @@
                 </div>
             </div>
             <div class="name-checkbox-credentials">
-                {{> user_settings}}
+                {{#if isUser}}
+                    {{> user_settings}}
+                {{/if}}
             </div>
         </div>
 
