@@ -270,12 +270,10 @@ app.get("/dms/:id", checkAuthentication, async (request, response) => {
         "users"
     );
 
-    console.log(dmsByUsers[request.params.id]);
-    
-
     response.render("dm_messages.hbs", {
         heading: username.username,
-        dms: dmsByUsers[request.params.id]
+        dms: dmsByUsers[request.params.id],
+        dmers_id: request.params.id
     }); 
 });
 
