@@ -24,13 +24,16 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "hbs": "^4.0.4",
+    "https": "^1.0.0",
     "mocha": "^6.1.4",
     "mongodb": "^3.2.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "path": "^0.12.7",
     "request": "^2.88.0",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^8.8.1"
+    "sweetalert2": "^8.8.1",
+    "web-push": "^3.3.3"
   },
   "devDependencies": {
     "chai-http": "^4.3.0"

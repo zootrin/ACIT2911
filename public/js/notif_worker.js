@@ -19,8 +19,7 @@ self.addEventListener("install", event => {
     );
 });
 
-this
-
+/*
 self.addEventListener("fetch", function(event) {
     event.respondWith(
         caches.match(event.request).then(function(response) {
@@ -33,4 +32,17 @@ self.addEventListener("fetch", function(event) {
             return fetch(event.request);
         })
     );
+});
+*/
+
+function genNotif(event) {
+    return new Promise((resolve, reject) => {
+        let { body, title } = event.data.json();
+        self.registration.showNotification(title, { body }).then(resolve);
+    });
+}
+
+self.addEventListener("push", event => {
+    console.log(event);
+    event.waitUntil(genNotif(event));
 });
