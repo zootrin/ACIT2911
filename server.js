@@ -219,8 +219,6 @@ app.get("/user/:id", async (request, response) => {
         }
     }
 
-    // var isUser = request.params.id == request.user._id ? true : false;
-
     response.render("user.hbs", {
         title: title,
         heading: user.username,
