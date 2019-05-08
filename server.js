@@ -12,11 +12,11 @@ const forum = require("./forum.js");
 const promises = require("./promises.js");
 const dms = require("./messaging.js");
 
-
 const app = express();
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
+const webpush = require("web-push");
 
 var sslOptions = {
     key: fs.readFileSync(path.resolve("./localhost-key.pem")),
@@ -33,6 +33,19 @@ var server = app.listen(port, () => {
     utils.init();
 });
 */
+
+const vapidKey = {
+    publicKey:
+        "BB578D2Rd51VtTYFdzPWrDk4w8QZqyBozw1nQG6_SnOcdtkljFuxWTENuQuUBeAooD4fHRVr5ivXyEKTtqkfC_I",
+    privateKey: "EdEftJLnIcGhQth3bTS1rHp_FIDnVu75SNOw5L2F9z4"
+};
+//console.log(vapidKey);
+
+webpush.setVapidDetails(
+    "http://quiet-brook-91223.herokuapp.com/",
+    vapidKey.publicKey,
+    vapidKey.privateKey
+);
 
 hbs.registerPartials(__dirname + "/views/partials");
 
@@ -278,6 +291,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     });
 });
 
+// display endpoint for messages in inbox
 app.get("/dms/:id", checkAuthentication, async (request, response) => {
     var dms = await promises.dmPromise(request.user._id.toString());
     var username = await promises.userPromise(request.params.id);
@@ -298,6 +312,27 @@ app.get("/dms/:id", checkAuthentication, async (request, response) => {
         dms: dmsByUsers[request.params.id],
         dmers_id: request.params.id
     });
+});
+
+app.get("/api/notifs", async (request, response) => {
+    if (request.isAuthenticated()) {
+        var dms = await promises.dmPromise(request.user._id.toString());
+
+        // groups array elements into {otherUser_id:[messages]} objects
+        let dmsByUsers = _.groupBy(
+            dms.map(message => {
+                message.users = message.users.filter(user => {
+                    return user !== request.user._id.toString();
+                })[0];
+                return message;
+            }),
+            "users"
+        );
+
+        response.send(dmsByUsers);
+    } else {
+        response.send({});
+    }
 });
 
 exports.closeServer = function() {
