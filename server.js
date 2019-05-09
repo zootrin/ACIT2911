@@ -12,12 +12,27 @@ const forum = require("./forum.js");
 const promises = require("./promises.js");
 const dms = require("./messaging.js");
 
-const app = express();
 
+const app = express();
+const path = require("path");
+const fs = require("fs");
+const https = require("https");
+
+var sslOptions = {
+    key: fs.readFileSync(path.resolve("./localhost-key.pem")),
+    cert: fs.readFileSync(path.resolve("./localhost.pem"))
+};
+
+var server = https.createServer(sslOptions, app).listen(port, () => {
+    console.log(`Server is up on the port ${port}`);
+    utils.init();
+});
+/*
 var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
+*/
 
 hbs.registerPartials(__dirname + "/views/partials");
 
@@ -280,7 +295,7 @@ app.get("/dms/:id", checkAuthentication, async (request, response) => {
         heading: username.username,
         dms: dmsByUsers[request.params.id],
         dmers_id: request.params.id
-    }); 
+    });
 });
 
 exports.closeServer = function() {
