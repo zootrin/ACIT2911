@@ -77,5 +77,5 @@ function reply_dm(request, response) {
 
 
 module.exports = router;
-module.exports = add_dm;
-module.exports = get_date;
+// module.exports = add_dm;
+// module.exports = get_date;

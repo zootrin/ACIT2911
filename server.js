@@ -12,12 +12,27 @@ const forum = require("./forum.js");
 const promises = require("./promises.js");
 const dms = require("./messaging.js");
 
-const app = express();
 
+const app = express();
+const path = require("path");
+const fs = require("fs");
+const https = require("https");
+
+var sslOptions = {
+    key: fs.readFileSync(path.resolve("./localhost-key.pem")),
+    cert: fs.readFileSync(path.resolve("./localhost.pem"))
+};
+
+var server = https.createServer(sslOptions, app).listen(port, () => {
+    console.log(`Server is up on the port ${port}`);
+    utils.init();
+});
+/*
 var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
+*/
 
 hbs.registerPartials(__dirname + "/views/partials");
 
@@ -42,9 +57,8 @@ hbs.registerHelper("year", () => {
 });
 
 hbs.registerHelper("populate", (dms, user_id) => {
-    
     return dms[user_id];
-})
+});
 
 app.use(pass);
 app.use(register);
@@ -188,6 +202,10 @@ app.get("/user/:id", async (request, response) => {
     let email = "Hidden by user";
     let userSettings;
 
+    for (let message of thread) {
+        message.date = String(message.date).split(" ")[0];
+    }
+
     if (user.settings.showEmail) {
         email = `${user.email}`;
     }
@@ -229,7 +247,7 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                return (user !== request.user._id.toString());
+                return user !== request.user._id.toString();
             })[0];
             return message;
         }),
@@ -240,10 +258,13 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     user_id_array = Object.keys(dmsByUsers);
     user_array = [];
 
-    for (i=0; i<user_id_array.length; i++) {
+    for (i = 0; i < user_id_array.length; i++) {
         var queried_user = await promises.userPromise(user_id_array[i]);
 
-        user_array.push({id: user_id_array[i], username: queried_user.username});
+        user_array.push({
+            id: user_id_array[i],
+            username: queried_user.username
+        });
     }
 
     response.render("dms.hbs", {
@@ -263,7 +284,7 @@ app.get("/dms/:id", checkAuthentication, async (request, response) => {
     let dmsByUsers = _.groupBy(
         dms.map(message => {
             message.users = message.users.filter(user => {
-                return (user !== request.user._id.toString());
+                return user !== request.user._id.toString();
             })[0];
             return message;
         }),
@@ -274,7 +295,7 @@ app.get("/dms/:id", checkAuthentication, async (request, response) => {
         heading: username.username,
         dms: dmsByUsers[request.params.id],
         dmers_id: request.params.id
-    }); 
+    });
 });
 
 exports.closeServer = function() {

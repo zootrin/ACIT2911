@@ -1,6 +1,10 @@
 const express = require("express");
-const pass = require("./passport.js");
+// const pass = require("./passport.js");
 const utils = require("./utils");
+
+const bcrypt = require("bcrypt")
+const saltRounds = 10;
+
 
 var router = express.Router();
 
@@ -9,10 +13,10 @@ router.post("/updateUser", updateUser);
 
 module.exports = router;
 
-function saveUser(request, response) {
+async function saveUser(request, response) {
     var email = request.body.email;
     var username = request.body.username;
-    var password = request.body.password;
+    let password = await bcrypt.hash(request.body.password, saltRounds);
 
     var db = utils.getDb();
 
