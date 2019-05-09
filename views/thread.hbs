@@ -9,14 +9,15 @@
     <div id="thread_container">
         <div id="op_container">
             <h1>{{heading}}</h1>
-            <p>{{op_message}}</p>
-            <p>{{poster}}</p>
-            <p>{{date}}</p>
+            <p class="small"><strong>Posted</strong> {{date}} by {{user.username}}</p>
+            <div class="color2">{{op_message}}</div>
+           
+            
             
             {{#if isOP}}
             <form method="post" action="/delete_post">
                 <input type="hidden" name="id" value={{id}}>
-                <input type="submit" value="Delete"></input>
+                <input type="submit" class="delete2" value="Delete"></input>
             </form>
 
             <button id="edit_button" onclick="show_edit_form()">Edit Post</button>
@@ -39,17 +40,15 @@
             <form method="post" action="/add_reply">
                 <input type="hidden" name="id" value={{id}}>
                 <textarea name="reply" class="post_text" rows="10" cols="50" placeholder="Reply to this post!" required></textarea><br>
-                <input type="submit" value="Reply"></input>
+                <div class="button2"><input type="submit"  value="Reply"></input></div>
             </form>
             {{/if}}
             
-            <ul>
-            {{#each reply}}
+           {{#each reply}}
                 <p>{{username}} replied on {{date}}</p>
                 <li>{{message}}</li>
                 <hr>
             {{/each}}
-            </ul>
         </div>
     </div>
 </body>

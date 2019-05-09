@@ -229,6 +229,18 @@ a {
 }
 
 /* ------------------------------------------- THREAD PAGE ------------------------------------------- */
+.small{
+    font-size: 15px;
+
+}
+
+.delete2 , #edit_button {
+  
+    margin-top: 15px;
+    width: 100px;
+  
+    
+    }
 #thread_container {
     width: 80%;
     margin: auto;
@@ -237,7 +249,7 @@ a {
 
 #replies_container {
     width: 95%;
-    margin: auto 0 auto auto;
+    margin-top: 15px;
 }
 
 #replies_container ul {
@@ -255,6 +267,26 @@ a {
     padding: 15px;
 }
 
+.delete2{
+    width: 80px;
+    background-color: #C83B1B;
+    color: white;
+    border-radius: 12px;
+}
+
+#edit_button{
+    transform: translate(75px, -37px);
+    margin-left: 10px;
+    border-radius: 12px;
+    background-color: #C83B1B;
+    color: white;
+}
+.button2{
+
+    margin-top: 15px;
+    width: 100px;
+
+}
 /* ------------------------------------------- USER PROFILE ------------------------------------------- */
 .dm_button {
     -webkit-appearance: button;
