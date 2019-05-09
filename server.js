@@ -34,17 +34,14 @@ var server = app.listen(port, () => {
 });
 */
 
-const vapidKey = {
-    publicKey:
-        "BB578D2Rd51VtTYFdzPWrDk4w8QZqyBozw1nQG6_SnOcdtkljFuxWTENuQuUBeAooD4fHRVr5ivXyEKTtqkfC_I",
-    privateKey: "EdEftJLnIcGhQth3bTS1rHp_FIDnVu75SNOw5L2F9z4"
-};
-//console.log(vapidKey);
+const vapidKeys = webpush.generateVAPIDKeys();
+app.locals.clientVapidKey = vapidKeys.publicKey;
+//console.log(app.locals.clientVapidKey);
 
 webpush.setVapidDetails(
     "http://quiet-brook-91223.herokuapp.com/",
-    vapidKey.publicKey,
-    vapidKey.privateKey
+    vapidKeys.publicKey,
+    vapidKeys.privateKey
 );
 
 hbs.registerPartials(__dirname + "/views/partials");
@@ -60,6 +57,7 @@ app.use(
         extended: true
     })
 );
+app.use(bodyParser.json())
 
 hbs.registerHelper("port", () => {
     return port;
@@ -331,6 +329,23 @@ app.get("/api/notifs", async (request, response) => {
     } else {
         response.send({});
     }
+});
+
+app.get("/api/vapidPublicKey", (request, response) => {
+    response.send({ key: app.locals.clientVapidKey });
+});
+
+app.post("/api/push", checkAuthentication, (request, response) => {
+    let title = request.body.notification.title
+    let icon = "/images/reply.png"
+    let body = request.body.notification.body
+    let url = request.body.notification.id
+    webpush.sendNotification(app.locals.pushSubscription,)
+});
+
+app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
+    app.locals.pushSubscription = request.body
+    //console.log(app.locals.pushSubscription)
 });
 
 exports.closeServer = function() {

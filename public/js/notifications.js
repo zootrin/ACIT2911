@@ -2,11 +2,19 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 
-const vapidKey = {
-    publicKey:
-        "BB578D2Rd51VtTYFdzPWrDk4w8QZqyBozw1nQG6_SnOcdtkljFuxWTENuQuUBeAooD4fHRVr5ivXyEKTtqkfC_I",
-    privateKey: "EdEftJLnIcGhQth3bTS1rHp_FIDnVu75SNOw5L2F9z4"
+var getPublicKey = async () => {
+    let key = await fetch("/api/vapidPublicKey", {
+        method: "GET"
+    }).then(response => {
+        return response.clone().json();
+    });
+    let vapidPublicKey = await urlBase64ToUint8Array(key.key);
+    //console.log(vapidPublicKey);
+
+    return vapidPublicKey;
 };
+var vapidPublicKey = getPublicKey();
+//console.log(vapidPublicKey);
 
 function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -22,7 +30,6 @@ function urlBase64ToUint8Array(base64String) {
     }
     return outputArray;
 }
-
 
 function registerWorker() {
     return navigator.serviceWorker
@@ -54,14 +61,36 @@ function registerWorker() {
         });
 }
 
-if ("serviceWorker" in navigator && "PushManager" in window) {
-    //window.addEventListener("load", registerWorker());
-    if (navigator.serviceWorker.controller) {
-        console.log("Working: ", navigator.serviceWorker.controller);
-    } else {
-        registerWorker();
+async function openPushSubscription() {
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+        //window.addEventListener("load", registerWorker());
+        if (navigator.serviceWorker.controller) {
+            console.log("Working: ", navigator.serviceWorker.controller);
+        }
+        let register = await registerWorker();
+        let vapidKey = await vapidPublicKey;
+
+        let PushSubscription = await register.pushManager.getSubscription();
+        if (PushSubscription === null) {
+            PushSubscription = await register.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: vapidKey
+            });
+        }
+
+        console.log(JSON.stringify(PushSubscription));
+        fetch("/api/pushsubscribe", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(PushSubscription)
+        });
     }
 }
+
+openPushSubscription();
 
 /*
 if (Notification.permission !== "denied") {

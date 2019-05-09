@@ -11,6 +11,7 @@ self.addEventListener("install", event => {
             .open(cacheName)
             .then(cache => {
                 //console.log("Opened cache");
+
                 return cache.add(cacheURLS);
             })
             .catch(error => {
@@ -35,11 +36,16 @@ self.addEventListener("fetch", event => {
     }
 });
 
+
+
+
 function genNotif(event) {
     return new Promise((resolve, reject) => {
         let data = event.data.json();
-        console.log(data)
-        self.registration.showNotification(data.title, { body: data.title }).then(resolve);
+        console.log(data);
+        self.registration
+            .showNotification(data.title, { body: data.title })
+            .then(resolve);
     });
 }
 
