@@ -41,13 +41,36 @@ li a:hover:not(.active) {
     padding: 5px;
     max-height: 32px;
 }
-
+/* *************** Inbox CSS *************** */
 .inbox_icon {
-    max-height: 28px;
+    width: 28px;
+    height: auto;
 }
 
 .inbox {
     padding: 7px;
+}
+.notification{
+    padding: 7px;
+    background-color: transparent;
+    color: white;
+    text-decoration: none;
+    padding: 7px auto;
+    position: relative;
+    display: inline-block;
+}
+.notification img{
+    width: 28px;
+    height: auto;
+}
+.notification .badge {
+  position: absolute;
+  padding: 0px 5px;
+  border-radius: 50%;
+  background-color: transparent;
+  color: black;
+  top: 15px;
+  right: 10px;
 }
 
 .container-1 {
