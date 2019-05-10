@@ -1,58 +1,30 @@
 const utils = require("./utils");
 const promises = require("./promises");
 const request = require("request");
-const fetch = require("node-fetch");
 
-const fs = require("fs");
-const path = require("path");
-const webpush = require("web-push");
-
-var getSubscription = () => {
-    return new Promise((resolve, reject) => {
-        request
-            .get({
-                url: "https://localhost:8080/api/getsubscribe"
-                /*
-                agentOptions: {
-                    key: fs.readFileSync(path.resolve("./localhost-key.pem")),
-                    cert: fs.readFileSync(path.resolve("./localhost.pem"))
-                }
-                */
-            })
-            .on("error", err => {
-                reject(err);
-            })
-            .on("response", response => {
-                resolve(response.toJSON());
-            });
-    });
-};
-
-async function formatNotif(change) {
+function formatNotif(change) {
     if (change.ns.coll === "messages") {
-        let payload = {
+        let notification = {
             title: `${change.fullDocument.username} - ${
                 change.fullDocument.date
             }`,
-            icon: "/images/reply.png",
             body: change.fullDocument.message,
-            url: `/thread/${change.fullDocument.thread_id}`
+            url: change.fullDocument.thread_id
         };
-        //console.log(JSON.stringify(notification));
 
-        let pushSubscription = await fetch(
-            "https://localhost:8080/api/getsubscribe"
-        ).then(response => {
-            return response.json();
-        });
-
-        //console.log(pushSubscription.body);
-        let notification = {
-            pushSubscription: pushSubscription.body.subscription,
-            payload: JSON.stringify(payload),
-            options: pushSubscription.body.vapidKeys
-        };
-        return notification;
+        return request.post(
+            "https://localhost:8080/api/push",
+            {
+                json: notification,
+                rejectUnauthorized: false
+            },
+            (err, response, body) => {
+                if (err) {
+                    console.log(err);
+                    return err;
+                }
+            }
+        );
     }
 }
 
@@ -81,6 +53,7 @@ async function openStream(user_id) {
             read: false
         };
 
+<<<<<<< HEAD
         await promises.updateUserPromise(user._id, item);
       
         let notification = await formatNotif(change);
@@ -114,6 +87,10 @@ async function openStream(user_id) {
             });
 
         console.log(pushed);
+=======
+        console.log(change);
+        await formatNotif(change);
+>>>>>>> parent of 9b7ad0b... notif sending to endpoint
     });
 }
 
