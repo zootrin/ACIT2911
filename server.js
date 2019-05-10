@@ -11,6 +11,7 @@ const pass = require("./passport.js");
 const forum = require("./forum.js");
 const promises = require("./promises.js");
 const dms = require("./messaging.js");
+const watcher = require("./changeStream.js");
 
 
 const app = express();
@@ -65,6 +66,13 @@ app.use(register);
 app.use(forum);
 app.use(dms);
 
+// app.use((request, response, next) => {
+//     if (request.isAuthenticated()) {
+//         watcher.watch();
+//     }
+//     next();
+// });
+
 // CHECKS AUTHENTICATION
 checkAuthentication = (request, response, next) => {
     if (request.isAuthenticated()) {
@@ -92,6 +100,7 @@ app.get("/login", (request, response) => {
 app.get("/logout", (request, response) => {
     request.logout();
     request.session.destroy(() => {
+        watcher.close();
         response.clearCookie("connect.sid");
         response.redirect("/");
     });
