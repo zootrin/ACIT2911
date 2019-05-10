@@ -1,30 +1,58 @@
 const utils = require("./utils");
 const promises = require("./promises");
 const request = require("request");
+const fetch = require("node-fetch");
 
-function formatNotif(change) {
+const fs = require("fs");
+const path = require("path");
+const webpush = require("web-push");
+
+var getSubscription = () => {
+    return new Promise((resolve, reject) => {
+        request
+            .get({
+                url: "https://localhost:8080/api/getsubscribe"
+                /*
+                agentOptions: {
+                    key: fs.readFileSync(path.resolve("./localhost-key.pem")),
+                    cert: fs.readFileSync(path.resolve("./localhost.pem"))
+                }
+                */
+            })
+            .on("error", err => {
+                reject(err);
+            })
+            .on("response", response => {
+                resolve(response.toJSON());
+            });
+    });
+};
+
+async function formatNotif(change) {
     if (change.ns.coll === "messages") {
-        let notification = {
+        let payload = {
             title: `${change.fullDocument.username} - ${
                 change.fullDocument.date
             }`,
+            icon: "/images/reply.png",
             body: change.fullDocument.message,
-            url: change.fullDocument.thread_id
+            url: `/thread/${change.fullDocument.thread_id}`
         };
+        //console.log(JSON.stringify(notification));
 
-        return request.post(
-            "https://localhost:8080/api/push",
-            {
-                json: notification,
-                rejectUnauthorized: false
-            },
-            (err, response, body) => {
-                if (err) {
-                    console.log(err);
-                    return err;
-                }
-            }
-        );
+        let pushSubscription = await fetch(
+            "https://localhost:8080/api/getsubscribe"
+        ).then(response => {
+            return response.json();
+        });
+
+        //console.log(pushSubscription.body);
+        let notification = {
+            pushSubscription: pushSubscription.body.subscription,
+            payload: JSON.stringify(payload),
+            options: pushSubscription.body.vapidKeys
+        };
+        return notification;
     }
 }
 
@@ -53,7 +81,37 @@ async function openStream() {
         var user_info = await promises.userthreadPromise();
 
         console.log(change);
-        await formatNotif(change);
+        let notification = await formatNotif(change);
+        console.log([
+            notification.pushSubscription,
+            notification.payload,
+            {
+                vapidDetails: {
+                    subject: "https://quiet-brook-91223.herokuapp.com/",
+                    publicKey: notification.options.publicKey,
+                    privateKey: notification.options.privateKey
+                }
+            }
+        ]);
+        let pushed = await webpush
+            .sendNotification(
+                notification.pushSubscription,
+                notification.payload,
+                {
+                    vapidDetails: {
+                        subject: "https://quiet-brook-91223.herokuapp.com/",
+                        publicKey: notification.options.publicKey,
+                        privateKey: notification.options.privateKey
+                    }
+                }
+            )
+            .catch(err => {
+                if (err) {
+                    return err;
+                }
+            });
+
+        console.log(pushed);
     });
 
     // stream for new messages

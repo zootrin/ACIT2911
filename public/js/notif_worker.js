@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 const cacheName = "notifCache";
-const cacheURLS = "/api/notifs";
+const cacheURLS = ["/api/notifs", "/api/getsubscribe"];
 
 self.addEventListener("install", event => {
     // Perform install steps
@@ -12,7 +12,7 @@ self.addEventListener("install", event => {
             .then(cache => {
                 //console.log("Opened cache");
 
-                return cache.add(cacheURLS);
+                return cache.addAll(cacheURLS);
             })
             .catch(error => {
                 return console.log(error);
@@ -20,7 +20,6 @@ self.addEventListener("install", event => {
     );
 });
 
-/*
 self.addEventListener("fetch", event => {
     if (event.request.destination === "document") {
         console.log(event.request);
@@ -31,16 +30,15 @@ self.addEventListener("fetch", event => {
                 //console.log(cleared);
                 await cache.add(cacheURLS);
                 let pulled = await cache.match(cacheURLS);
-                console.log(await pulled.json());
+                //console.log(await pulled.json());
             })
         );
     }
 });
-*/
 
 function genNotif(event) {
     return new Promise((resolve, reject) => {
-        console.log(event.data)
+        console.log(event.data);
         let data = event.data.text();
         console.log(data);
         self.registration
@@ -61,6 +59,7 @@ self.addEventListener("push", event => {
 
 self.onnotificationclick = async function(event) {
     let url = event.notification.data;
+
     console.log("Clicked:", event.notification.tag);
     event.notification.close();
 

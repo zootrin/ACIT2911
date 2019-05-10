@@ -40,7 +40,7 @@ app.locals.clientVapidKey = vapidKeys.publicKey;
 //console.log(app.locals.clientVapidKey);
 
 webpush.setVapidDetails(
-    "http://quiet-brook-91223.herokuapp.com/",
+    "https://quiet-brook-91223.herokuapp.com/",
     vapidKeys.publicKey,
     vapidKeys.privateKey
 );
@@ -345,12 +345,12 @@ app.get("/api/vapidPublicKey", (request, response) => {
 });
 
 app.post("/api/push", checkAuthentication, async (request, response) => {
-    console.log(request)
+    console.log(request);
     let title = request.body.notification.title;
     let icon = "/images/reply.png";
     let body = request.body.notification.body;
     let url = request.body.notification.url;
-    
+
     let payload = {
         title,
         icon,
@@ -374,6 +374,16 @@ app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     //console.log(app.locals.pushSubscription);
 
     response.send({ status: 200 });
+});
+
+app.get("/api/getsubscribe", (request, response) => {
+    //console.log(request)
+    let subscription = app.locals.pushSubscription;
+    //console.log(subscription);
+    response.send({
+        status: 200,
+        body: { subscription, vapidKeys }
+    });
 });
 
 exports.closeServer = function() {
