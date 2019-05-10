@@ -78,7 +78,7 @@ async function openPushSubscription() {
             });
         }
 
-        console.log(JSON.stringify(PushSubscription));
+        //console.log(JSON.stringify(PushSubscription));
         return fetch("/api/pushsubscribe", {
             method: "POST",
             headers: {
