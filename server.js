@@ -345,6 +345,7 @@ app.get("/api/vapidPublicKey", (request, response) => {
 });
 
 app.post("/api/push", checkAuthentication, async (request, response) => {
+    console.log(request)
     let title = request.body.notification.title;
     let icon = "/images/reply.png";
     let body = request.body.notification.body;

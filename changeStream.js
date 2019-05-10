@@ -1,5 +1,32 @@
 const utils = require("./utils");
 const promises = require("./promises");
+const request = require("request");
+
+function formatNotif(change) {
+    if (change.ns.coll === "messages") {
+        let notification = {
+            title: `${change.fullDocument.username} - ${
+                change.fullDocument.date
+            }`,
+            body: change.fullDocument.message,
+            url: change.fullDocument.thread_id
+        };
+
+        return request.post(
+            "https://localhost:8080/api/push",
+            {
+                json: notification,
+                rejectUnauthorized: false
+            },
+            (err, response, body) => {
+                if (err) {
+                    console.log(err);
+                    return err;
+                }
+            }
+        );
+    }
+}
 
 async function openStream() {
     var db = utils.getDb();
@@ -9,21 +36,24 @@ async function openStream() {
     console.log(user);
 
     const collection = db.collection("messages");
-    const changeStream = collection.watch(
-        [{ $match: 
-            { $and: [
-                { 'fullDocument.type': 'reply' }
-                // { 'fullDocument.thread_id': { $in: user.subscribed_threads}}
-            ]}
-            
-            // match thread_id is in users subscribed array
-        }]
-    );
+    const changeStream = collection.watch([
+        {
+            $match: {
+                $and: [
+                    { "fullDocument.type": "reply" }
+                    // { 'fullDocument.thread_id': { $in: user.subscribed_threads}}
+                ]
+            }
 
-    changeStream.on('change', async change => {
+            // match thread_id is in users subscribed array
+        }
+    ]);
+
+    changeStream.on("change", async change => {
         var user_info = await promises.userthreadPromise();
 
         console.log(change);
+        await formatNotif(change);
     });
 
     // stream for new messages
@@ -33,13 +63,13 @@ async function openStream() {
 function closeStream() {
     var db = utils.getDb();
     const collection = db.collection("messages");
-    const changeStream = collection.watch(
-        [{
+    const changeStream = collection.watch([
+        {
             $match: {
-                'fullDocument.type': 'reply'
+                "fullDocument.type": "reply"
             }
-        }]
-    );
+        }
+    ]);
     changeStream.close();
 }
 

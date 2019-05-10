@@ -1,5 +1,5 @@
 const utils = require('./utils.js');
-const _ = require("lodash");
+//const _ = require("lodash");
 
 // Populates message board page with the titles of each
 // message in the database
