@@ -50,8 +50,8 @@ router.post(
         failureRedirect: "/login"
     }),
     (req, res) => {
-        watcher.open();
         res.redirect("/");
+        watcher.open(req.user._id);
     }
 );
 
