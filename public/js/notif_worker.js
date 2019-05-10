@@ -40,7 +40,8 @@ self.addEventListener("fetch", event => {
 
 function genNotif(event) {
     return new Promise((resolve, reject) => {
-        let data = event.data.json();
+        console.log(event.data)
+        let data = event.data.text();
         console.log(data);
         self.registration
             .showNotification(data.title, {
