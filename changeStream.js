@@ -34,16 +34,22 @@ async function openStream(user_id) {
     var user = await promises.userPromise(user_id);
 
     const collection = db.collection("messages");
-  
-    const thread_changeStream = collection.watch(
-        [{ $match: 
-            { $and: [
-                { 'fullDocument.type': 'reply' },
-                { 'fullDocument.thread_id': { $in: user.subscribed_threads }},
-                { 'fullDocument.username': { $ne: user.username }}
-            ]}
-        }]
-    );
+
+    const thread_changeStream = collection.watch([
+        {
+            $match: {
+                $and: [
+                    { "fullDocument.type": "reply" },
+                    {
+                        "fullDocument.thread_id": {
+                            $in: user.subscribed_threads
+                        }
+                    },
+                    { "fullDocument.username": { $ne: user.username } }
+                ]
+            }
+        }
+    ]);
 
     thread_changeStream.on("change", async change => {
         var item = {
@@ -53,10 +59,8 @@ async function openStream(user_id) {
             read: false
         };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         await promises.updateUserPromise(user._id, item);
-      
+
         let notification = await formatNotif(change);
         console.log([
             notification.pushSubscription,
@@ -88,14 +92,6 @@ async function openStream(user_id) {
             });
 
         console.log(pushed);
-=======
-        console.log(change);
-        await formatNotif(change);
->>>>>>> parent of 9b7ad0b... notif sending to endpoint
-=======
-        console.log(change);
-        await formatNotif(change);
->>>>>>> parent of 9b7ad0b... notif sending to endpoint
     });
 }
 
@@ -106,15 +102,21 @@ async function closeStream(user_id) {
 
     const collection = db.collection("messages");
 
-    const thread_changeStream = collection.watch(
-        [{ $match: 
-            { $and: [
-                { 'fullDocument.type': 'reply' },
-                { 'fullDocument.thread_id': { $in: user.subscribed_threads }},
-                { 'fullDocument.username': { $ne: user.username }}
-            ]}
-        }]
-    );
+    const thread_changeStream = collection.watch([
+        {
+            $match: {
+                $and: [
+                    { "fullDocument.type": "reply" },
+                    {
+                        "fullDocument.thread_id": {
+                            $in: user.subscribed_threads
+                        }
+                    },
+                    { "fullDocument.username": { $ne: user.username } }
+                ]
+            }
+        }
+    ]);
     thread_changeStream.close();
 }
 
