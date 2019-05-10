@@ -41,7 +41,8 @@ async function saveUser(request, response) {
                             showEmail: false,
                             showName: false,
                             enableNotifs: false
-                        }
+                        },
+                        subscribed_threads: []
                     },
                     (err, result) => {
                         if (err) {
