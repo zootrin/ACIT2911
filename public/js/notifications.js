@@ -79,7 +79,7 @@ async function openPushSubscription() {
         }
 
         console.log(JSON.stringify(PushSubscription));
-        fetch("/api/pushsubscribe", {
+        return fetch("/api/pushsubscribe", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"

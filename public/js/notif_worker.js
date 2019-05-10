@@ -20,6 +20,7 @@ self.addEventListener("install", event => {
     );
 });
 
+/*
 self.addEventListener("fetch", event => {
     if (event.request.destination === "document") {
         console.log(event.request);
@@ -35,16 +36,19 @@ self.addEventListener("fetch", event => {
         );
     }
 });
-
-
-
+*/
 
 function genNotif(event) {
     return new Promise((resolve, reject) => {
         let data = event.data.json();
         console.log(data);
         self.registration
-            .showNotification(data.title, { body: data.title })
+            .showNotification(data.title, {
+                icon: data.icon,
+                body: data.body,
+                data: data.url,
+                tag: data.title
+            })
             .then(resolve);
     });
 }
@@ -53,3 +57,14 @@ self.addEventListener("push", event => {
     console.log(event);
     event.waitUntil(genNotif(event));
 });
+
+self.onnotificationclick = async function(event) {
+    let url = event.notification.data;
+    console.log("Clicked:", event.notification.tag);
+    event.notification.close();
+
+    let allClients = await clients.matchAll({ type: "window" });
+    console.log(allClients[0]);
+
+    event.waitUntil(allClients[0].navigate(url));
+};

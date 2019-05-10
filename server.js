@@ -57,7 +57,7 @@ app.use(
         extended: true
     })
 );
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 hbs.registerHelper("port", () => {
     return port;
@@ -335,17 +335,35 @@ app.get("/api/vapidPublicKey", (request, response) => {
     response.send({ key: app.locals.clientVapidKey });
 });
 
-app.post("/api/push", checkAuthentication, (request, response) => {
-    let title = request.body.notification.title
-    let icon = "/images/reply.png"
-    let body = request.body.notification.body
-    let url = request.body.notification.id
-    webpush.sendNotification(app.locals.pushSubscription,)
+app.post("/api/push", checkAuthentication, async (request, response) => {
+    let title = request.body.notification.title;
+    let icon = "/images/reply.png";
+    let body = request.body.notification.body;
+    let url = request.body.notification.url;
+    
+    let payload = {
+        title,
+        icon,
+        body,
+        url
+    };
+
+    let pushed = await webpush.sendNotification(
+        app.locals.pushSubscription,
+        payload
+    );
+
+    response.send({
+        status: pushed.statusCode,
+        body: pushed.body
+    });
 });
 
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
-    app.locals.pushSubscription = request.body
-    //console.log(app.locals.pushSubscription)
+    app.locals.pushSubscription = request.body;
+    //console.log(app.locals.pushSubscription);
+
+    response.send({ status: 200 });
 });
 
 exports.closeServer = function() {
