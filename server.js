@@ -77,13 +77,6 @@ app.use(register);
 app.use(forum);
 app.use(dms);
 
-// app.use((request, response, next) => {
-//     if (request.isAuthenticated()) {
-//         watcher.watch();
-//     }
-//     next();
-// });
-
 // CHECKS AUTHENTICATION
 checkAuthentication = (request, response, next) => {
     if (request.isAuthenticated()) {
@@ -109,9 +102,12 @@ app.get("/login", (request, response) => {
 
 // Logout Page
 app.get("/logout", (request, response) => {
+    var user_id = request.user._id;
+    
     request.logout();
+
     request.session.destroy(() => {
-        watcher.close();
+        watcher.close(user_id);
         response.clearCookie("connect.sid");
         response.redirect("/");
     });

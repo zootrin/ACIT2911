@@ -1,46 +1,51 @@
 const utils = require("./utils");
 const promises = require("./promises");
 
-async function openStream() {
+async function openStream(user_id) {
     var db = utils.getDb();
 
-    var user = await promises.userPromise();
-
-    console.log(user);
+    var user = await promises.userPromise(user_id);
 
     const collection = db.collection("messages");
-    const changeStream = collection.watch(
+    const thread_changeStream = collection.watch(
         [{ $match: 
             { $and: [
-                { 'fullDocument.type': 'reply' }
-                // { 'fullDocument.thread_id': { $in: user.subscribed_threads}}
+                { 'fullDocument.type': 'reply' },
+                { 'fullDocument.thread_id': { $in: user.subscribed_threads }},
+                { 'fullDocument.username': { $ne: user.username }}
             ]}
-            
-            // match thread_id is in users subscribed array
         }]
     );
 
-    changeStream.on('change', async change => {
-        var user_info = await promises.userthreadPromise();
+    thread_changeStream.on('change', async change => {
+        var item = {
+            _id: change.fullDocument._id,
+            thread_id: change.fullDocument.thread_id,
+            message: change.fullDocument.message,
+            read: false
+        };
 
-        console.log(change);
+        await promises.updateUserPromise(user._id, item);
     });
-
-    // stream for new messages
-    // match current user id is the recipient
 }
 
-function closeStream() {
+async function closeStream(user_id) {
     var db = utils.getDb();
+
+    var user = await promises.userPromise(user_id);
+
     const collection = db.collection("messages");
-    const changeStream = collection.watch(
-        [{
-            $match: {
-                'fullDocument.type': 'reply'
-            }
+
+    const thread_changeStream = collection.watch(
+        [{ $match: 
+            { $and: [
+                { 'fullDocument.type': 'reply' },
+                { 'fullDocument.thread_id': { $in: user.subscribed_threads }},
+                { 'fullDocument.username': { $ne: user.username }}
+            ]}
         }]
     );
-    changeStream.close();
+    thread_changeStream.close();
 }
 
 module.exports = {
