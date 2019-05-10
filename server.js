@@ -138,8 +138,9 @@ app.get("/search", async (request, response) => {
         return;
     }
 
-    var threads = await promises.searchPromise(request.query.keyword, "thread");
-    var replies = await promises.searchPromise(request.query.keyword, "reply");
+    var threads_replies = await promises.searchPromise(request.query.keyword, "thread", 'thread_reply');
+    var replies = await promises.searchPromise(request.query.keyword, "reply", 'reply');
+    var threads = await promises.searchPromise(request.query.keyword, "thread", 'thread');
 
     var replies_thread_ids = Object.keys(_.groupBy(replies, "thread_id"));
 
@@ -147,7 +148,7 @@ app.get("/search", async (request, response) => {
 
     for (i = 0; i < replies_thread_ids.length; i++) {
         for (j = 0; j < replies.length; j++) {
-            if (replies[j]._id == replies_thread_ids[i]) {
+            if (replies[j].thread_id == replies_thread_ids[i]) {
                 exist_flag = true;
                 break;
             }
@@ -156,15 +157,17 @@ app.get("/search", async (request, response) => {
             var queried_thread = await promises.threadPromise(
                 replies_thread_ids[i]
             );
-            threads.push(queried_thread);
+            threads_replies.push(queried_thread);
         }
         exist_flag = false;
     }
 
-    response.render("forum.hbs", {
+    response.render("search.hbs", {
         title: "Search",
         heading: `Search: ${request.query.keyword}`,
-        message: threads
+        thread_reply: threads_replies,
+        thread: threads,
+        reply: replies
     });
 });
 

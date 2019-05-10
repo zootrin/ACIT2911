@@ -26,19 +26,38 @@ var messagePromise = () => {
 };
 
 // Retrieves threads/replies with keywords for search
-var searchPromise = (param_keywords, param_type) => {
+var searchPromise = (param_keywords, param_type, query_type) => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
         var re = new RegExp(`.*${param_keywords}.*`, 'i');
 
-        var query = {
-            $or: [
-                {message: re},
-                {title: re}
-            ],
-            type: param_type
-        };
+        var query = 'thread';
+
+        if (query_type == 'thread_reply') {
+            query = {
+                $or: [
+                    {message: re},
+                    {title: re}
+                ],
+                type: param_type
+            };
+        }
+
+        if (query_type == 'thread') {
+            query = { title: re };
+        }
+
+        if (query_type == 'reply') {
+            query = {
+                $and: [
+                    {type: 'reply'},
+                    {message: re}
+                ]
+            };
+        }
+
+        
         
         db.collection('messages').find(query).toArray((err, result) => {
             if (err) {
