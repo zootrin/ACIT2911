@@ -54,6 +54,7 @@ async function openStream(user_id) {
         };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         await promises.updateUserPromise(user._id, item);
       
         let notification = await formatNotif(change);
@@ -87,6 +88,10 @@ async function openStream(user_id) {
             });
 
         console.log(pushed);
+=======
+        console.log(change);
+        await formatNotif(change);
+>>>>>>> parent of 9b7ad0b... notif sending to endpoint
 =======
         console.log(change);
         await formatNotif(change);
