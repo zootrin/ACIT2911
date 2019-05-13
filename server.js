@@ -107,7 +107,7 @@ app.get("/logout", (request, response) => {
     request.logout();
 
     request.session.destroy(() => {
-        watcher.close(user_id);
+        // watcher.close(user_id);
         response.clearCookie("connect.sid");
         response.redirect("/");
     });
