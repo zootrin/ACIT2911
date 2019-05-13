@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 const cacheName = "notifCache";
-const cacheURLS = "/api/notifs";
+const cacheURLS = ["/api/notifs", "/api/getsubscribe"];
 
 self.addEventListener("install", event => {
     // Perform install steps
@@ -12,7 +12,7 @@ self.addEventListener("install", event => {
             .then(cache => {
                 //console.log("Opened cache");
 
-                return cache.add(cacheURLS);
+                return cache.addAll(cacheURLS);
             })
             .catch(error => {
                 return console.log(error);
@@ -20,23 +20,23 @@ self.addEventListener("install", event => {
     );
 });
 
-/*
+
 self.addEventListener("fetch", event => {
     if (event.request.destination === "document") {
-        console.log(event.request);
+        //console.log(event.request);
         event.waitUntil(
             caches.open(cacheName).then(async cache => {
                 //console.log("Opened cache");
                 await cache.delete(cacheURLS);
                 //console.log(cleared);
-                await cache.add(cacheURLS);
+                await cache.addAll(cacheURLS);
                 let pulled = await cache.match(cacheURLS);
                 console.log(await pulled.json());
             })
         );
     }
 });
-*/
+
 
 function genNotif(event) {
     return new Promise((resolve, reject) => {
@@ -49,16 +49,31 @@ function genNotif(event) {
                 body: data.body,
                 data: data.url,
                 tag: data.tag,
-                renotify: true
+                renotify: data.renotify
             })
             .then(resolve);
     });
 }
 
-self.addEventListener("push", event => {
+self.addEventListener("push", async event => {
     //console.log(event);
-    event.waitUntil(genNotif(event));
+    let allClients = await clients.matchAll({ type: window });
+    if (allClients[0].focused) {
+        let data = event.data.json();
+        let message = {
+            icon: data.icon,
+            body: data.title,
+            url: data.url
+        };
+        event.waitUntil(allClients[0].postMessage(message));
+    } else {
+        event.waitUntil(genNotif(event));
+    }
 });
+
+self.onmessage(event => {
+    
+})
 
 self.onnotificationclick = async function(event) {
     let url = event.notification.data;
