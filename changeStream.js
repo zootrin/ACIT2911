@@ -23,7 +23,7 @@ async function formatNotif(change) {
         //console.log(JSON.stringify(payload));
 
         let pushSubscription = await fetch(
-            "https://localhost:8080/api/getsubscribe"
+            "/api/getsubscribe"
         ).then(response => {
             return response.json();
         });
@@ -141,7 +141,7 @@ async function dm_formatNotif(change) {
         //console.log(JSON.stringify(payload));
 
         let pushSubscription = await fetch(
-            "https://localhost:8080/api/getsubscribe"
+            "/api/getsubscribe"
         ).then(response => {
             return response.json();
         });
