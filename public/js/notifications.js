@@ -130,10 +130,9 @@ openPushSubscription();
 openMessageListener();
 updateNotifCount();
 
-/*
+
 if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function(result) {
         console.log(result);
     });
 }
-*/
