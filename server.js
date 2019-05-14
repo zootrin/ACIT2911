@@ -26,16 +26,16 @@ var sslOptions = {
     cert: fs.readFileSync(path.resolve("./localhost.pem"))
 };
 
-var server = https.createServer(sslOptions, app).listen(port, () => {
-    console.log(`Server is up on the port ${port}`);
-    utils.init();
-});
-/*
+// var server = https.createServer(sslOptions, app).listen(port, () => {
+//     console.log(`Server is up on the port ${port}`);
+//     utils.init();
+// });
+
 var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
-*/
+
 
 const vapidKeys = {
     publicKey: "BKyb0KGvc8HKy4A-RDJJ0_tZKUiXMlVcmBBhYSEz9U08Nc0xAuvA6uWv7ANEyJm6o0voRItkHhz5y0X0bEAw4Wo",
@@ -402,9 +402,9 @@ app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     response.send({ status: 200 });
 });
 
-app.get('/.well-known/acme-challenge/:content', function (req, res) {
-    res.send('-0W2u2ALv33EzYeSQEln_M3Yo6z-Hd9qv3Mk6iCD2KQ.vUhz1OwQfK7SYm1ZIxqBsXDz_e9FYFeaaiaDPTv8tIw')
-})
+app.get('/.well-known/acme-challenge/:content', (req, res) => {
+    res.send('-0W2u2ALv33EzYeSQEln_M3Yo6z-Hd9qv3Mk6iCD2KQ.vUhz1OwQfK7SYm1ZIxqBsXDz_e9FYFeaaiaDPTv8tIw');
+});
 
 exports.closeServer = function() {
     server.close();
