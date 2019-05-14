@@ -26,15 +26,15 @@ var sslOptions = {
     cert: fs.readFileSync(path.resolve("./localhost.pem"))
 };
 
-var server = https.createServer(sslOptions, app).listen(port, () => {
-    console.log(`Server is up on the port ${port}`);
-    utils.init();
-});
-
-// var server = app.listen(port, () => {
+// var server = https.createServer(sslOptions, app).listen(port, () => {
 //     console.log(`Server is up on the port ${port}`);
 //     utils.init();
 // });
+
+var server = app.listen(port, () => {
+    console.log(`Server is up on the port ${port}`);
+    utils.init();
+});
 
 
 const vapidKeys = {
