@@ -1,5 +1,7 @@
 const port = process.env.PORT || 8080;
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const hbs = require("hbs");
@@ -386,7 +388,7 @@ app.post("/api/push", checkAuthentication, async (request, response) => {
 app.get("/api/getsubscribe", (request, response) => {
     //console.log(request)
     let subscription = app.locals.pushSubscription;
-    //console.log(subscription);
+    console.log(subscription);
     response.send({
         status: 200,
         body: { subscription, vapidKeys }
@@ -395,7 +397,7 @@ app.get("/api/getsubscribe", (request, response) => {
 
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     app.locals.pushSubscription = request.body;
-    //console.log(app.locals.pushSubscription);
+    // console.log(app.locals.pushSubscription);
 
     response.send({ status: 200 });
 });
