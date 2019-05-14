@@ -14,12 +14,12 @@ self.addEventListener("install", event => {
 
                 return cache.addAll(cacheURLS);
             })
+            .then(clients.claim())
             .catch(error => {
                 return console.log(error);
             })
     );
 });
-
 
 self.addEventListener("fetch", event => {
     if (event.request.destination === "document") {
@@ -31,12 +31,13 @@ self.addEventListener("fetch", event => {
                 //console.log(cleared);
                 await cache.addAll(cacheURLS);
                 let pulled = await cache.match(cacheURLS);
-                console.log(await pulled.json());
+                if (pulled !== undefined) {
+                    console.log(pulled);
+                }
             })
         );
     }
 });
-
 
 function genNotif(event) {
     return new Promise((resolve, reject) => {
@@ -55,25 +56,32 @@ function genNotif(event) {
     });
 }
 
+// self.onmessage = async function(event) {
+//     console.log("Caught!");
+//     event.waitUntil(console.log(event));
+// };
+
 self.addEventListener("push", async event => {
     //console.log(event);
-    let allClients = await clients.matchAll({ type: window });
+    await clients.claim();
+
+    let allClients = await clients.matchAll({ type: "window" });
+    //console.log(allClients[0].focused);
+
     if (allClients[0].focused) {
+        console.log("Storing notif");
         let data = event.data.json();
-        let message = {
+        let message = JSON.stringify({
             icon: data.icon,
             body: data.title,
             url: data.url
-        };
-        event.waitUntil(allClients[0].postMessage(message));
-    } else {
-        event.waitUntil(genNotif(event));
+        });
+        console.log(data.tag, message);
+        console.log(allClients[0]);
+        allClients[0].postMessage({ tag: data.tag, message: message });
+        genNotif(event)
     }
 });
-
-self.onmessage(event => {
-    
-})
 
 self.onnotificationclick = async function(event) {
     let url = event.notification.data;
