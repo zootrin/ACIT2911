@@ -402,6 +402,10 @@ app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     response.send({ status: 200 });
 });
 
+app.get('/.well-known/acme-challenge/:content', function (req, res) {
+    res.send('-0W2u2ALv33EzYeSQEln_M3Yo6z-Hd9qv3Mk6iCD2KQ.vUhz1OwQfK7SYm1ZIxqBsXDz_e9FYFeaaiaDPTv8tIw')
+})
+
 exports.closeServer = function() {
     server.close();
 };
