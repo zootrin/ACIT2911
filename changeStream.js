@@ -57,9 +57,8 @@ async function openStream(user_id) {
                         "fullDocument.thread_id": {
                             $in: user.subscribed_threads
                         }
-                    } //,
-                    //{ "fullDocument.username": { $ne: user.username } }
-                    // TODO: Uncomment
+                    },
+                    { "fullDocument.username": { $ne: user.username } }
                 ]
             }
         }
@@ -117,8 +116,8 @@ async function closeStream(user_id) {
                         "fullDocument.thread_id": {
                             $in: user.subscribed_threads
                         }
-                    } //,
-                    //{ "fullDocument.username": { $ne: user.username } }
+                    },
+                    { "fullDocument.username": { $ne: user.username } }
                 ]
             }
         }
