@@ -23,7 +23,7 @@ async function formatNotif(change) {
         //console.log(JSON.stringify(payload));
 
         let pushSubscription = await fetch(
-            "/api/getsubscribe"
+            "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
         ).then(response => {
             return response.json();
         });
@@ -141,7 +141,7 @@ async function dm_formatNotif(change) {
         //console.log(JSON.stringify(payload));
 
         let pushSubscription = await fetch(
-            "/api/getsubscribe"
+            "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
         ).then(response => {
             return response.json();
         });
