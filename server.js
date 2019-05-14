@@ -402,8 +402,8 @@ app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     response.send({ status: 200 });
 });
 
-app.get('/.well-known/acme-challenge/-0W2u2ALv33EzYeSQEln_M3Yo6z-Hd9qv3Mk6iCD2KQ', (req, res) => {
-    res.send('-0W2u2ALv33EzYeSQEln_M3Yo6z-Hd9qv3Mk6iCD2KQ.vUhz1OwQfK7SYm1ZIxqBsXDz_e9FYFeaaiaDPTv8tIw');
+app.get('/.well-known/acme-challenge/T7witKO1ya0tj4N4NTpv5XSfC_sigKZUKJcP0-nJ6bk', (req, res) => {
+    res.send('T7witKO1ya0tj4N4NTpv5XSfC_sigKZUKJcP0-nJ6bk.vUhz1OwQfK7SYm1ZIxqBsXDz_e9FYFeaaiaDPTv8tIw');
 });
 
 exports.closeServer = function() {
