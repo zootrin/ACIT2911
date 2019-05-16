@@ -10,6 +10,9 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
+//var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
+var subEndpoint = "http://localhost:8080/api/getsubscribe";
+
 // formats replies notifications
 async function formatNotif(change) {
     if (change.ns.coll === "messages") {
@@ -28,10 +31,7 @@ async function formatNotif(change) {
         };
         //console.log(JSON.stringify(payload));
 
-        let pushSubscription = await fetch(
-            //"https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
-            "http://localhost:8080/api/getsubscribe"
-        ).then(response => {
+        let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
         //console.log(pushSubscription.body);
@@ -64,7 +64,7 @@ async function openStream(user_id) {
                         "fullDocument.thread_id": {
                             $in: user.subscribed_threads
                         }
-                    }//,
+                    } //,
                     //{ "fullDocument.username": { $ne: user.username } }
                 ]
             }
@@ -123,7 +123,7 @@ async function closeStream(user_id) {
                         "fullDocument.thread_id": {
                             $in: user.subscribed_threads
                         }
-                    }//,
+                    } //,
                     //{ "fullDocument.username": { $ne: user.username } }
                 ]
             }
@@ -148,9 +148,7 @@ async function dm_formatNotif(change) {
         };
         //console.log(JSON.stringify(payload));
 
-        let pushSubscription = await fetch(
-            "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
-        ).then(response => {
+        let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
         //console.log(pushSubscription.body);
@@ -158,7 +156,7 @@ async function dm_formatNotif(change) {
         let notification = {
             pushSubscription: pushSubscription.body.subscription,
             payload: JSON.stringify(payload),
-            options: pushSubscription.body.vapidKeys
+            options: vapidKeys
         };
         //console.log(notification)
 

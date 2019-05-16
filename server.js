@@ -360,30 +360,30 @@ app.get("/api/vapidPublicKey", (request, response) => {
     response.send({ key: app.locals.clientVapidKey });
 });
 
-app.post("/api/push", checkAuthentication, async (request, response) => {
-    console.log(request);
-    let title = request.body.notification.title;
-    let icon = "/images/reply.png";
-    let body = request.body.notification.body;
-    let url = request.body.notification.url;
+// app.post("/api/push", checkAuthentication, async (request, response) => {
+//     console.log(request);
+//     let title = request.body.notification.title;
+//     let icon = "/images/reply.png";
+//     let body = request.body.notification.body;
+//     let url = request.body.notification.url;
 
-    let payload = {
-        title,
-        icon,
-        body,
-        url
-    };
+//     let payload = {
+//         title,
+//         icon,
+//         body,
+//         url
+//     };
 
-    let pushed = await webpush.sendNotification(
-        app.locals.pushSubscription,
-        payload
-    );
+//     let pushed = await webpush.sendNotification(
+//         app.locals.pushSubscription,
+//         payload
+//     );
 
-    response.send({
-        status: pushed.statusCode,
-        body: pushed.body
-    });
-});
+//     response.send({
+//         status: pushed.statusCode,
+//         body: pushed.body
+//     });
+// });
 
 app.get("/api/getsubscribe", (request, response) => {
     //console.log(request)
