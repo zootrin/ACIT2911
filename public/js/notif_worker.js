@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 const cacheName = "notifCache";
-const cacheURLS = ["/api/notifs", "/api/getsubscribe"];
+const cacheURLS = "/api/notifs";
 
 self.addEventListener("install", event => {
     // Perform install steps
@@ -12,7 +12,7 @@ self.addEventListener("install", event => {
             .then(cache => {
                 //console.log("Opened cache");
 
-                return cache.addAll(cacheURLS);
+                return cache.add(cacheURLS);
             })
             .then(clients.claim())
             .catch(error => {
@@ -29,10 +29,10 @@ self.addEventListener("fetch", event => {
                 //console.log("Opened cache");
                 await cache.delete(cacheURLS);
                 //console.log(cleared);
-                await cache.addAll(cacheURLS);
+                await cache.add(cacheURLS);
                 let pulled = await cache.match(cacheURLS);
                 if (pulled !== undefined) {
-                    console.log(pulled);
+                    //console.log(pulled);
                 }
             })
         );

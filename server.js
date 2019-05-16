@@ -386,17 +386,30 @@ app.get("/api/vapidPublicKey", (request, response) => {
 // });
 
 app.get("/api/getsubscribe", (request, response) => {
-    //console.log(request)
+    //console.log(request.user)
+
     let subscription = app.locals.pushSubscription;
     //console.log(subscription);
+    let user = {
+        _id: app.locals.user_id,
+        subscribed_threads: app.locals.subscribed_threads
+    };
+
+    //console.log(user);
+
     response.send({
         status: 200,
-        body: { subscription }
+        body: {
+            subscription: subscription,
+            user: user
+        }
     });
 });
 
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     app.locals.pushSubscription = request.body;
+    app.locals.user_id = request.user._id;
+    app.locals.subscribed_threads = request.user.subscribed_threads;
     // console.log(app.locals.pushSubscription);
 
     response.send({ status: 200 });

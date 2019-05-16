@@ -127,6 +127,7 @@ var userPromise = param_id => {
     });
 };
 
+/*
 var updateUserPromise = (param_id, item) => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
@@ -145,6 +146,7 @@ var updateUserPromise = (param_id, item) => {
         });
     });
 };
+*/
 
 // Retrieves all threads of a user
 var userthreadPromise = param_username => {
@@ -191,5 +193,5 @@ module.exports = {
     userthreadPromise: userthreadPromise,
     dmPromise: dmPromise,
     searchPromise: searchPromise,
-    updateUserPromise: updateUserPromise
+    //updateUserPromise: updateUserPromise
 };
