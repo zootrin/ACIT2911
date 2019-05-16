@@ -10,6 +10,7 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
+//TODO: Switch bc it has to be hardcoded
 //var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
 var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
@@ -27,7 +28,7 @@ async function formatNotif(change) {
             body: `${change.fullDocument.date}\n${change.fullDocument.message}`,
             tag: change.fullDocument.thread_id,
             url: `/thread/${change.fullDocument.thread_id}`,
-            renotify: false
+            renotify: true
         };
         //console.log(JSON.stringify(payload));
 

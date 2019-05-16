@@ -120,8 +120,27 @@ async function openMessageListener() {
 
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
-        document.getElementById("notifCount").innerHTML =
-            window.sessionStorage.length;
+        let notifications = window.sessionStorage;
+        document.getElementById("notifCount").innerHTML = notifications.length;
+
+        var notifContent = Object.entries(notifications);
+        var notif = "";
+
+        for (i=0; i<notifications.length; i++) {
+            var session = JSON.parse(notifContent[i][1]);
+
+            icon = session.icon;
+            content = session.body;
+            link = session.url;
+
+            text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
+
+            notif += text;
+        }
+
+        console.log('html: ' + notif);
+
+        document.getElementById("notif_list").innerHTML = notif;
     } else {
         window.sessionStorage.clear();
     }
