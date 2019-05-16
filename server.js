@@ -35,6 +35,8 @@ var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
+watcher.open();
+watcher.reply_open();
 
 const vapidKeys = {
     publicKey:
@@ -112,7 +114,7 @@ app.get("/logout", (request, response) => {
     request.logout();
 
     request.session.destroy(() => {
-        watcher.close(user_id);
+        //watcher.close(user_id);
         response.clearCookie("connect.sid");
         response.redirect("/");
     });
