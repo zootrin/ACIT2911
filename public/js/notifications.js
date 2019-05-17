@@ -119,7 +119,6 @@ async function openMessageListener() {
 }
 
 
-// TODO: DM notifs link to a weird page without menu or footer
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let notifications = window.sessionStorage;
