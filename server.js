@@ -35,8 +35,6 @@ var server = app.listen(port, () => {
     console.log(`Server is up on the port ${port}`);
     utils.init();
 });
-watcher.open();
-watcher.reply_open();
 
 const vapidKeys = {
     publicKey:
@@ -305,12 +303,24 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         });
     }
 
+    let view = null;
+    let render = false;
+
+    //console.log(Object.keys(request.query).length);
+    if (Object.keys(request.query).length !== 0) {
+        view = request.query.view;
+        render = true;
+    }
+    //console.log(view, render);
+
     response.render("dms.hbs", {
         title: "DM Inbox",
         heading: "Direct Message Inbox",
         dm_id: user_id_array,
         dm_users: user_array,
-        dms: dmsByUsers
+        dms: dmsByUsers,
+        view: view,
+        render: render
     });
 });
 

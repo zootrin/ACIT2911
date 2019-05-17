@@ -1,4 +1,4 @@
-const utils = require("./utils");
+//const utils = require("./utils");
 const promises = require("./promises");
 //const request = require("request");
 const fetch = require("node-fetch");
@@ -123,7 +123,7 @@ async function openStream() {
 async function closeStream(user_id) {
     var db = utils.getDb();
 
-    var user = await promises.userPromise(user_id);
+    //var user = await promises.userPromise(user_id);
 
     const collection = db.collection("messages");
 
