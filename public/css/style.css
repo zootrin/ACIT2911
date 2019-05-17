@@ -41,6 +41,11 @@ li a:hover:not(.active) {
     padding: 5px;
     max-height: 32px;
 }
+
+.hide {
+    display: none;
+}
+
 /* *************** Inbox CSS *************** */
 .inbox_icon {
     width: 28px;
@@ -50,7 +55,7 @@ li a:hover:not(.active) {
 .inbox {
     padding: 7px;
 }
-.notification{
+.notification {
     padding: 7px;
     background-color: transparent;
     color: white;
@@ -59,18 +64,18 @@ li a:hover:not(.active) {
     position: relative;
     display: inline-block;
 }
-.notification img{
+.notification img {
     width: 28px;
     height: auto;
 }
 .notification .badge {
-  position: absolute;
-  padding: 0px 5px;
-  border-radius: 50%;
-  background-color: transparent;
-  color: black;
-  top: 15px;
-  right: 10px;
+    position: absolute;
+    padding: 0px 5px;
+    border-radius: 50%;
+    background-color: transparent;
+    color: black;
+    top: 15px;
+    right: 10px;
 }
 
 .container-1 {
@@ -229,18 +234,16 @@ a {
 }
 
 /* ------------------------------------------- THREAD PAGE ------------------------------------------- */
-.small{
+.small {
     font-size: 15px;
-
 }
 
-.delete2 , #edit_button {
-    display:inline-block;
+.delete2,
+#edit_button {
+    display: inline-block;
     margin-top: 15px;
     width: 100px;
-  
-    
-    }
+}
 #thread_container {
     width: 80%;
     margin: auto;
@@ -267,27 +270,23 @@ a {
     padding: 15px;
 }
 
-.delete2{
+.delete2 {
     width: 80px;
-    background-color: #C83B1B;
+    background-color: #5cb8e6;
     color: white;
     border-radius: 12px;
 }
 
-#edit_button{
-    transform: translate(75px, -2.45vw);
-    margin-left: 10px;
+#edit_button {
     border-radius: 12px;
-    background-color: #C83B1B;
+    background-color: #5cb8e6;
     color: white;
 }
-.button2{
-
+.button2 {
     margin-top: 15px;
     width: 100px;
-
 }
-.box1{
+.box1 {
     background-color: black;
 }
 /* ------------------------------------------- USER PROFILE ------------------------------------------- */
@@ -531,4 +530,54 @@ form {
 
 .content-name-history p {
     border-bottom: 1px solid black;
+}
+
+
+
+#notifications {
+    position: relative;
+    overflow:visible;
+    display:inline-block
+}
+
+#notifDropdown {
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+#notifs {
+    position: absolute;
+    z-index:3;
+    border: 1px solid #336680;
+    left:auto;
+    right:0;
+    width: 300px;
+}
+
+#menuList {
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    overflow: visible;
+}
+
+#notif_list a {
+    color: white;
+    background-color: #333;
+}
+
+#notif_list a:hover {
+    color: #5cb8e6;
+    font-weight: bold;
+}
+
+#notif_list img {
+    max-height: 30px;
+    float: left;
+    padding-right: 1.5em;
+}
+
+#notif_list {
+    background-color: #333;
 }

@@ -36,10 +36,12 @@ function registerWorker() {
         .register("/js/notif_worker.js", { scope: "/" })
         .then(function(registration) {
             // Registration was successful
+            /*
             console.log(
                 "ServiceWorker registration successful with scope: ",
                 registration.scope
             );
+            */
 
             /*
             registration.pushManager
@@ -67,6 +69,7 @@ async function openPushSubscription() {
         if (navigator.serviceWorker.controller) {
             console.log("Working: ", navigator.serviceWorker.controller);
         }
+
         let register = await registerWorker();
         let vapidKey = await vapidPublicKey;
 
@@ -78,7 +81,7 @@ async function openPushSubscription() {
             });
         }
 
-        console.log(JSON.stringify(PushSubscription));
+        //console.log(JSON.stringify(PushSubscription));
         return fetch("/api/pushsubscribe", {
             method: "POST",
             headers: {
@@ -107,13 +110,53 @@ async function closePushSubscription() {
     });
 }
 
+async function openMessageListener() {
+    navigator.serviceWorker.addEventListener("message", async event => {
+        console.log("caught!");
+        window.sessionStorage.setItem(event.data.tag, event.data.message);
+        return updateNotifCount();
+    });
+}
+
+async function updateNotifCount() {
+    if (document.getElementById("notifCount") !== null) {
+        let notifications = window.sessionStorage;
+        document.getElementById("notifCount").innerHTML = notifications.length;
+
+        var notifContent = Object.entries(notifications);
+        var notif = "";
+
+        for (i=0; i<notifications.length; i++) {
+            var session = JSON.parse(notifContent[i][1]);
+
+            icon = session.icon;
+            content = session.body;
+            link = session.url;
+
+            text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
+
+            notif += text;
+        }
+
+        console.log('html: ' + notif);
+
+        document.getElementById("notif_list").innerHTML = notif;
+    } else {
+        window.sessionStorage.clear();
+    }
+}
+
+async function toggleNotif() {
+    document.getElementById("notifs").classList.toggle("hide");
+}
+
 //closePushSubscription();
 openPushSubscription();
+openMessageListener();
+updateNotifCount();
 
-/*
 if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function(result) {
         console.log(result);
     });
 }
-*/
