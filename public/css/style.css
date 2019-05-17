@@ -74,8 +74,8 @@ li a:hover:not(.active) {
     border-radius: 50%;
     background-color: transparent;
     color: black;
-    top: 15px;
-    right: 10px;
+    top: 16px;
+    right: 13px;
 }
 
 .container-1 {
@@ -131,11 +131,11 @@ li a:hover:not(.active) {
 #notif_list a {
     color: white;
     background-color: #333;
+    text-align: left;
 }
 
 #notif_list a:hover {
-    color: #5cb8e6;
-    font-weight: bold;
+    background-color: rgb(77, 77, 77);
 }
 
 #notif_list img {
@@ -146,6 +146,11 @@ li a:hover:not(.active) {
 
 #notif_list {
     background-color: #333;
+}
+
+#notif_list li {
+    border-top: 1px solid #5cb8e6;
+    width: 350px;
 }
 
 /* ------------------------------------------- LOGIN PAGE ------------------------------------------- */

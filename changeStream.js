@@ -29,6 +29,8 @@ async function formatNotif(change) {
             url: `/thread/${change.fullDocument.thread_id}`,
             renotify: true
         };
+
+        
         //console.log(JSON.stringify(payload));
 
         let pushSubscription = await fetch(subEndpoint).then(response => {

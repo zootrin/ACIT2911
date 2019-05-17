@@ -2,7 +2,6 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 
-
 var getPublicKey = async () => {
     let key = await fetch("/api/vapidPublicKey", {
         method: "GET"
@@ -119,6 +118,8 @@ async function openMessageListener() {
     });
 }
 
+
+// TODO: DM notifs link to a weird page without menu or footer
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let notifications = window.sessionStorage;
@@ -147,19 +148,18 @@ async function updateNotifCount() {
 
 async function toggleNotif() {
     document.getElementById("notifs").classList.toggle("hide");
+    document.getElementById("notifications").classList.toggle("active");
 }
 
-async function closeNotif(event) {
-    if (!event.target.matches('.notification')) {
-        var dropdowns = document.getElementsByClassName("notifs");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
+var ignore = document.getElementById('notifs');
+
+document.onclick = function closeNotif(event) {
+    var target = event.target || event.srcElement;
+    if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+        return;
     }
+    document.getElementById("notifs").classList.add("hide");
+    document.getElementById("notifications").classList.remove("active");
 };
 
 //closePushSubscription();
