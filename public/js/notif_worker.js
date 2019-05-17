@@ -77,32 +77,13 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ message: message });
     }
-
+    
     idbKeyval.set(data.tag, message);
 
-=======
-    /*
-    for (let client of allClients) {
-        console.log("Storing notif");
-=======
-    /*
-    for (let client of allClients) {
-        console.log("Storing notif");
->>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
-        client.postMessage({ tag: data.tag, message: message });
-    }
-    */
-    idbKeyval.set(data.tag, message);
-<<<<<<< HEAD
->>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
-=======
->>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
     genNotif(event);
 });
 
