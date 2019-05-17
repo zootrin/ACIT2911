@@ -359,10 +359,13 @@ a {
     appearance: button;
 
     text-decoration: none;
-    color: initial;
     padding: 0.5em;
     font-size: 0.8em;
+    display: inline;
+    text-align:center;
+    color: white"
 }
+
 
 /* ------------------------------------------- DM PAGE ------------------------------------------- */
 .dm_list {
@@ -474,9 +477,14 @@ form {
     border: none;
     border-radius: 2px;
     color: white;
+    height: 2em;
 }
 
 .button:active {
+    background-color: #5cb8e6;
+}
+
+.button:hover {
     background-color: #5cb8e6;
 }
 
@@ -596,3 +604,11 @@ form {
 }
 
 
+.width {
+    padding-left: 5%;
+    padding-right: 55%;
+    right: 0;
+    padding-top: 2.5%;
+    position: absolute;
+    
+}
