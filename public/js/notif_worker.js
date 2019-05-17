@@ -77,13 +77,13 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
+    /*
     for (let client of allClients) {
         console.log("Storing notif");
-        client.postMessage({ message: message });
+        client.postMessage({ tag: data.tag, message: message });
     }
-    
+    */
     idbKeyval.set(data.tag, message);
-
     genNotif(event);
 });
 
