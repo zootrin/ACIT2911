@@ -299,7 +299,6 @@ app.get("/dms", checkAuthentication, async (request, response) => {
     user_array = [];
 
     for (i = 0; i < user_id_array.length; i++) {
-        // console.log(user_id_array[i]);
         var queried_user = await promises.userPromise(user_id_array[i]);
 
         user_array.push({

@@ -114,33 +114,29 @@ async function openMessageListener() {
     console.log("Opening listener");
     navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
+        window.sessionStorage.setItem(event.data.tag, event.data.message);
         return updateNotifCount();
     });
 }
 
-
+// TODO: fix
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let count = await idbKeyval.keys();
+        console.log(count.length);
         document.getElementById("notifCount").innerHTML = count.length;
-
-        var notifContent = [];
-        for (i=0; i<count.length; i++) {
-            let key = count[i];
-            let content = await idbKeyval.get(key);
-            notifContent.push(content);
-        }
-
+        var notifContent = Object.entries(notifications);
         var notif = "";
 
-        for (i=0; i<count.length; i++) {
-            var session = JSON.parse(notifContent[i]);
+        for (i=0; i<notifications.length; i++) {
+            var session = JSON.parse(notifContent[i][1]);
 
             icon = session.icon;
             content = session.body;
             link = session.url;
 
             text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
+
             notif += text;
         }
 
