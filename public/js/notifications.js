@@ -126,7 +126,10 @@ async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let count = await idbKeyval.keys();
         console.log(count.length);
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
         document.getElementById("notifCount").innerHTML = count.length;
         var notifContent = Object.entries(notifications);
         var notif = "";
@@ -146,7 +149,10 @@ async function updateNotifCount() {
         document.getElementById("notif_list").innerHTML = notif;
     } else {
         await idbKeyval.clear();
+<<<<<<< HEAD
         return;
+=======
+>>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
     }
 }
 

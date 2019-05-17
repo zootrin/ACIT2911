@@ -68,7 +68,7 @@ self.addEventListener("push", async event => {
     //console.log(event);
     await clients.claim();
 
-    let allClients = await clients.matchAll({ type: "window" });
+    //let allClients = await clients.matchAll({ type: "window" });
     //console.log(allClients[0].focused);
     let data = event.data.json();
     let message = JSON.stringify({
@@ -77,6 +77,7 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
+<<<<<<< HEAD
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ message: message });
@@ -84,6 +85,15 @@ self.addEventListener("push", async event => {
 
     idbKeyval.set(data.tag, message);
 
+=======
+    /*
+    for (let client of allClients) {
+        console.log("Storing notif");
+        client.postMessage({ tag: data.tag, message: message });
+    }
+    */
+    idbKeyval.set(data.tag, message);
+>>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
     genNotif(event);
 });
 
