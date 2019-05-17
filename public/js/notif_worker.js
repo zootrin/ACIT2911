@@ -1,8 +1,11 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable indent */
 /* eslint-disable quotes */
+importScripts(
+    "https://cdn.jsdelivr.net/npm/idb-keyval@3/dist/idb-keyval-iife.js"
+);
 const cacheName = "notifCache";
-const cacheURLS = ["/api/notifs", "/api/getsubscribe"];
+const cacheURLS = "/api/notifs";
 
 self.addEventListener("install", event => {
     // Perform install steps
@@ -12,7 +15,7 @@ self.addEventListener("install", event => {
             .then(cache => {
                 //console.log("Opened cache");
 
-                return cache.addAll(cacheURLS);
+                return cache.add(cacheURLS);
             })
             .then(clients.claim())
             .catch(error => {
@@ -29,10 +32,10 @@ self.addEventListener("fetch", event => {
                 //console.log("Opened cache");
                 await cache.delete(cacheURLS);
                 //console.log(cleared);
-                await cache.addAll(cacheURLS);
+                await cache.add(cacheURLS);
                 let pulled = await cache.match(cacheURLS);
                 if (pulled !== undefined) {
-                    console.log(pulled);
+                    //console.log(pulled);
                 }
             })
         );
@@ -67,23 +70,21 @@ self.addEventListener("push", async event => {
 
     let allClients = await clients.matchAll({ type: "window" });
     //console.log(allClients[0].focused);
+    let data = event.data.json();
+    let message = JSON.stringify({
+        icon: data.icon,
+        body: data.title,
+        url: data.url
+    });
 
-    if (allClients[0].focused) {
+    for (let client of allClients) {
         console.log("Storing notif");
-
-        let data = event.data.json();
-        let message = JSON.stringify({
-            icon: data.icon,
-            body: data.title,
-            url: data.url
-        });
-        //console.log(data.tag, message);
-        //console.log(allClients[0]);
-
-        allClients[0].postMessage({ tag: data.tag, message: message });
-    } else {
-        genNotif(event);
+        client.postMessage({ message: message });
     }
+
+    idbKeyval.set(data.tag, message);
+
+    genNotif(event);
 });
 
 self.onnotificationclick = async function(event) {

@@ -1,4 +1,4 @@
-const utils = require("./utils");
+//const utils = require("./utils");
 const promises = require("./promises");
 //const request = require("request");
 const fetch = require("node-fetch");
@@ -14,7 +14,7 @@ var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
 // var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
-async function formatNotif(change) {
+async function formatNotif(change, pushSubscription) {
     if (change.ns.coll === "messages") {
         let thread = await promises.threadPromise(
             change.fullDocument.thread_id
@@ -32,13 +32,13 @@ async function formatNotif(change) {
         
         //console.log(JSON.stringify(payload));
 
-        let pushSubscription = await fetch(subEndpoint).then(response => {
-            return response.json();
-        });
-        //console.log(pushSubscription.body);
+        // let pushSubscription = await fetch(subEndpoint).then(response => {
+        //     return response.json();
+        // });
+        // console.log(pushSubscription.body);
 
         let notification = {
-            pushSubscription: pushSubscription.body.subscription,
+            pushSubscription: pushSubscription,
             payload: JSON.stringify(payload),
             options: vapidKeys
         };
@@ -49,25 +49,26 @@ async function formatNotif(change) {
 }
 
 // opens changestream for threads
-async function openStream(user_id) {
+async function openStream() {
     var db = utils.getDb();
 
-    var user = await promises.userPromise(user_id);
+    //var user = await promises.userPromise(user_id);
 
     const collection = db.collection("messages");
 
     const thread_changeStream = collection.watch([
         {
             $match: {
-                $and: [
-                    { "fullDocument.type": "reply" },
-                    {
-                        "fullDocument.thread_id": {
-                            $in: user.subscribed_threads
-                        }
-                    } //,
-                    //{ "fullDocument.username": { $ne: user.username } }
-                ]
+                // $and: [
+                //     { "fullDocument.type": "reply" },
+                //     {
+                //         "fullDocument.thread_id": {
+                //             $in: user.subscribed_threads
+                //         }
+                //     } //,
+                //     //{ "fullDocument.username": { $ne: user.username } }
+                // ]
+                "fullDocument.type": "reply"
             }
         }
     ]);
@@ -81,29 +82,41 @@ async function openStream(user_id) {
         };
         //console.log(change)
 
-        await promises.updateUserPromise(user._id, item);
+        let pushSubscription = await fetch(subEndpoint).then(response => {
+            return response.json();
+        });
+        //console.log(pushSubscription.body);
 
-        let notification = await formatNotif(change);
+        let user = pushSubscription.body.user;
 
-        let pushed = await webpush
-            .sendNotification(
-                notification.pushSubscription,
-                notification.payload,
-                {
-                    vapidDetails: {
-                        subject: "http://quiet-brook-91223.herokuapp.com/",
-                        publicKey: notification.options.publicKey,
-                        privateKey: notification.options.privateKey
+        if (user.subscribed_threads.includes(change.fullDocument.thread_id)) {
+            let notification = await formatNotif(
+                change,
+                pushSubscription.body.subscription
+            );
+
+            let pushed = await webpush
+                .sendNotification(
+                    notification.pushSubscription,
+                    notification.payload,
+                    {
+                        vapidDetails: {
+                            subject: "http://quiet-brook-91223.herokuapp.com/",
+                            publicKey: notification.options.publicKey,
+                            privateKey: notification.options.privateKey
+                        }
                     }
-                }
-            )
-            .catch(err => {
-                if (err) {
-                    return err;
-                }
-            });
+                )
+                .catch(err => {
+                    if (err) {
+                        return err;
+                    }
+                });
 
-        console.log(`Push: ${pushed.statusCode}`);
+            console.log(`Push: ${pushed.statusCode}`);
+        }
+
+        //await promises.updateUserPromise(user._id, item);
     });
 }
 
@@ -111,7 +124,7 @@ async function openStream(user_id) {
 async function closeStream(user_id) {
     var db = utils.getDb();
 
-    var user = await promises.userPromise(user_id);
+    //var user = await promises.userPromise(user_id);
 
     const collection = db.collection("messages");
 
@@ -133,7 +146,7 @@ async function closeStream(user_id) {
     thread_changeStream.close();
 }
 
-async function dm_formatNotif(change) {
+async function dm_formatNotif(change, pushSubscription) {
     if (change.ns.coll === "direct_message") {
         let payload = {
             title: `${
@@ -149,13 +162,13 @@ async function dm_formatNotif(change) {
         };
         //console.log(JSON.stringify(payload));
 
-        let pushSubscription = await fetch(subEndpoint).then(response => {
-            return response.json();
-        });
+        // let pushSubscription = await fetch(subEndpoint).then(response => {
+        //     return response.json();
+        // });
         //console.log(pushSubscription.body);
 
         let notification = {
-            pushSubscription: pushSubscription.body.subscription,
+            pushSubscription: pushSubscription,
             payload: JSON.stringify(payload),
             options: vapidKeys
         };
@@ -165,43 +178,55 @@ async function dm_formatNotif(change) {
     }
 }
 
-async function reply_openStream(user_id) {
+async function reply_openStream() {
     var db = utils.getDb();
 
     const collection = db.collection("direct_message");
 
-    var query = [
-        {
-            $match: { "fullDocument.recipient": user_id }
-        }
-    ];
+    // var query = [
+    //     {
+    //         $match: { "fullDocument.recipient": user_id }
+    //     }
+    // ];
 
-    const dm_changeStream = collection.watch(query);
+    const dm_changeStream = collection.watch();
 
     dm_changeStream.on("change", async change => {
-        console.log(change);
+        //console.log(change);
 
-        let dm_notification = await dm_formatNotif(change);
+        let pushSubscription = await fetch(subEndpoint).then(response => {
+            return response.json();
+        });
 
-        let pushed = await webpush
-            .sendNotification(
-                dm_notification.pushSubscription,
-                dm_notification.payload,
-                {
-                    vapidDetails: {
-                        subject: "http://quiet-brook-91223.herokuapp.com/",
-                        publicKey: dm_notification.options.publicKey,
-                        privateKey: dm_notification.options.privateKey
+        if (
+            change.fullDocument.recipient.toString() ===
+            pushSubscription.body.user._id
+        ) {
+            let dm_notification = await dm_formatNotif(
+                change,
+                pushSubscription.body.subscription
+            );
+
+            let pushed = await webpush
+                .sendNotification(
+                    dm_notification.pushSubscription,
+                    dm_notification.payload,
+                    {
+                        vapidDetails: {
+                            subject: "http://quiet-brook-91223.herokuapp.com/",
+                            publicKey: dm_notification.options.publicKey,
+                            privateKey: dm_notification.options.privateKey
+                        }
                     }
-                }
-            )
-            .catch(err => {
-                if (err) {
-                    return err;
-                }
-            });
+                )
+                .catch(err => {
+                    if (err) {
+                        return err;
+                    }
+                });
 
-        console.log(`Push: ${pushed.statusCode}`);
+            console.log(`Push: ${pushed.statusCode}`);
+        }
     });
 }
 
