@@ -127,7 +127,10 @@ async function updateNotifCount() {
         let count = await idbKeyval.keys();
         console.log(count.length);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
 =======
 >>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
         document.getElementById("notifCount").innerHTML = count.length;
@@ -150,7 +153,10 @@ async function updateNotifCount() {
     } else {
         await idbKeyval.clear();
 <<<<<<< HEAD
+<<<<<<< HEAD
         return;
+=======
+>>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
 =======
 >>>>>>> parent of e753417... Merge branch 'Develop' of https://github.com/cat-box/ACIT2911 into Develop
     }
