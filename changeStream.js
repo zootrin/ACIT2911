@@ -20,7 +20,6 @@ async function formatNotif(change) {
         let thread = await promises.threadPromise(
             change.fullDocument.thread_id
         );
-        //console.log(thread)
 
         let payload = {
             title: `${change.fullDocument.username} posted in ${thread.title}`,

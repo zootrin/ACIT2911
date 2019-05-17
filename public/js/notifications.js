@@ -2,6 +2,7 @@
 /* eslint-disable indent */
 /* eslint-disable quotes */
 
+
 var getPublicKey = async () => {
     let key = await fetch("/api/vapidPublicKey", {
         method: "GET"
@@ -138,8 +139,6 @@ async function updateNotifCount() {
             notif += text;
         }
 
-        console.log('html: ' + notif);
-
         document.getElementById("notif_list").innerHTML = notif;
     } else {
         window.sessionStorage.clear();
@@ -149,6 +148,19 @@ async function updateNotifCount() {
 async function toggleNotif() {
     document.getElementById("notifs").classList.toggle("hide");
 }
+
+async function closeNotif(event) {
+    if (!event.target.matches('.notification')) {
+        var dropdowns = document.getElementsByClassName("notifs");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+};
 
 //closePushSubscription();
 openPushSubscription();
