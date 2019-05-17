@@ -44,13 +44,18 @@ describe('get registration', () => {
             done()
         })
     })
+    it('should return html', (done) => {
+        request.get('http://localhost:8080/registration', (err, res) => {
+            expect('Content-Type', /html/)
+            done()
+        })
+    })
 })
 
 describe('get search of test', () => {
     it('should return 200 Ok', function() {
         request.get('http://localhost:8080/search?keyword=test'), (err, res) => {
             Response.statusCode.should.equal(304);
-            console.log(response.body);
             done();
         };
     });
@@ -60,6 +65,12 @@ describe('get search of test', () => {
             done()
         })
     })
+    it('should return list that is not empty', function() {
+        request.get('http://localhost:8080/search?keyword=test'), (err, res) => {
+            expect(JSON.parse(res.body).length).greaterThan(0);
+            done();
+        };
+    });
 })
 
 describe('get thread posting', () => {
