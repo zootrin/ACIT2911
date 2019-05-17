@@ -12,6 +12,15 @@
 
     {{/if}}
 
+{{#if render}}
+
+<body onload="document.getElementById('{{view}}').click()">
+{{else}}
+
+<body>
+
+{{/if}}
+
     {{> menu}}
 
     <div id="dm_view_container">
@@ -20,10 +29,10 @@
         <div id="dm_username_list">
             <ul class="dm_list">
                 {{#each dm_users}}
-                    <li>
-                        <a href="/dms/{{id}}" target="dm_messages" id="{{id}}">{{username}}</a>
-                        <hr>
-                    </li>
+                <li>
+                    <a href="/dms/{{id}}" target="dm_messages" id="{{id}}">{{username}}</a>
+                    <hr>
+                </li>
                 {{/each}}
             </ul>
         </div>
