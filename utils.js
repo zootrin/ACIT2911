@@ -194,7 +194,7 @@ async function dm_formatNotif(change, pushSubscription) {
                 change.fullDocument.message_body
             }`,
             tag: change.fullDocument._id,
-            url: `/dms?view=${change.fullDocument.recipient}`,
+            url: `/dms?view=${change.fullDocument.sender}`,
             renotify: true
         };
         //console.log(JSON.stringify(payload));
