@@ -77,6 +77,7 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
+    // TODO: uncomment
     /*
     for (let client of allClients) {
         console.log("Storing notif");

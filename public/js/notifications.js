@@ -124,7 +124,6 @@ async function updateNotifCount() {
         let count = await idbKeyval.keys();
         document.getElementById("notifCount").innerHTML = count.length;
 
-
         var notifContent = [];
         for (i=0; i<count.length; i++) {
             let key = count[i];
