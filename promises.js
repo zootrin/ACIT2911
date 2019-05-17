@@ -1,4 +1,4 @@
-const utils = require('./utils.js');
+const utils = require("./utils.js");
 const MongoClient = require("mongodb").MongoClient;
 //const _ = require("lodash");
 
@@ -13,7 +13,7 @@ var messagePromise = () => {
                 {
                     type: "thread"
                 },
-                {         
+                {
                     _id: 0
                 }
             )
@@ -31,44 +31,38 @@ var searchPromise = (param_keywords, param_type, query_type) => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
 
-        var re = new RegExp(`.*${param_keywords}.*`, 'i');
+        var re = new RegExp(`.*${param_keywords}.*`, "i");
 
-        var query = 'thread';
+        var query = "thread";
 
-        if (query_type == 'thread_reply') {
+        if (query_type == "thread_reply") {
             query = {
-                $or: [
-                    {message: re},
-                    {title: re}
-                ],
+                $or: [{ message: re }, { title: re }],
                 type: param_type
             };
         }
 
-        if (query_type == 'thread') {
-            query = { 
+        if (query_type == "thread") {
+            query = {
                 title: re,
                 thread_id: null
             };
         }
 
-        if (query_type == 'reply') {
+        if (query_type == "reply") {
             query = {
-                $and: [
-                    {type: 'reply'},
-                    {message: re}
-                ]
+                $and: [{ type: "reply" }, { message: re }]
             };
         }
 
-        
-        
-        db.collection('messages').find(query).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
+        db.collection("messages")
+            .find(query)
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
     });
 };
 
@@ -153,15 +147,17 @@ var updateUserPromise = (param_id, item) => {
 var userthreadPromise = param_username => {
     return new Promise((resolve, reject) => {
         var db = utils.getDb();
-        db.collection('messages').find({
-            username: param_username,
-            type: 'thread'
-        }).toArray((err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
+        db.collection("messages")
+            .find({
+                username: param_username,
+                type: "thread"
+            })
+            .toArray((err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(result);
+            });
     });
 };
 
@@ -193,6 +189,6 @@ module.exports = {
     userPromise: userPromise,
     userthreadPromise: userthreadPromise,
     dmPromise: dmPromise,
-    searchPromise: searchPromise,
+    searchPromise: searchPromise
     //updateUserPromise: updateUserPromise
 };

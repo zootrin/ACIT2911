@@ -111,7 +111,8 @@ async function closePushSubscription() {
 }
 
 async function openMessageListener() {
-    navigator.serviceWorker.addEventListener("message", async event => {
+    console.log("Opening listener");
+    navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
         window.sessionStorage.setItem(event.data.tag, event.data.message);
         return updateNotifCount();
@@ -120,10 +121,11 @@ async function openMessageListener() {
 
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
-        document.getElementById("notifCount").innerHTML =
-            window.sessionStorage.length;
+        let count = await idbKeyval.keys();
+        console.log(count.length);
+        document.getElementById("notifCount").innerHTML = count.length;
     } else {
-        window.sessionStorage.clear();
+        await idbKeyval.clear();
     }
 }
 

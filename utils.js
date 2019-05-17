@@ -49,21 +49,15 @@ var subEndpoint = "http://localhost:8080/api/getsubscribe";
 // formats replies notifications
 async function formatNotif(change, pushSubscription) {
     if (change.ns.coll === "messages") {
-        let findThread = () => {
-            return new Promise((resolve, reject) => {
-                let query = getObjectId(change.fullDocument.thread_id);
-                getDb()
-                    .collection("messages")
-                    .findOne(query, (err, result) => {
-                        if (err) {
-                            reject(err);
-                        }
-                        resolve(result);
-                    });
-            });
+        let ObjectID = getObjectId();
+        let query = {
+            _id: ObjectID(change.fullDocument.thread_id)
         };
-        let thread = await findThread();
-        //console.log(thread)
+        
+        let thread = await getDb()
+            .collection("messages")
+            .findOne(query);
+        //console.log(thread);
 
         let payload = {
             title: `${change.fullDocument.username} posted in ${thread.title}`,
@@ -123,7 +117,7 @@ async function openStream() {
             message: change.fullDocument.message,
             read: false
         };
-        console.log(change)
+        console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
