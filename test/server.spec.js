@@ -7,19 +7,19 @@ describe('get home', () => {
             expect(res.statusCode).equals(200);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return home html', (done) => {
         request.get('http://localhost:8080/', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
 
 describe('get login', () => {
@@ -28,19 +28,19 @@ describe('get login', () => {
             expect(res.statusCode).equals(200);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/login', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return login html', (done) => {
         request.get('http://localhost:8080/login', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
 
 describe('get registration', () => {
@@ -49,19 +49,19 @@ describe('get registration', () => {
             expect(res.statusCode).equals(200)
             done();
         });
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/registration', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return registration html', (done) => {
         request.get('http://localhost:8080/registration', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
 
 describe('get search of test', () => {
@@ -70,25 +70,25 @@ describe('get search of test', () => {
             Response.statusCode.should.equal(304);
             done();
         };
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/search?keyword=test', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return list that is not empty', function() {
         request.get('http://localhost:8080/search?keyword=test'), (err, res) => {
             expect(JSON.parse(res.body).length).greaterThan(0);
             done();
         };
-    });
+    }).timeout(10000);
     it('should return search html', (done) => {
         request.get('http://localhost:8080/search?keyword=test', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
 
 describe('get thread posting', () => {
@@ -97,19 +97,19 @@ describe('get thread posting', () => {
             expect(res.statusCode).equals(200);
             done();
         };
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/thread/5cdb4c979a6d5a00177b9ea9', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return thread html', (done) => {
         request.get('http://localhost:8080/thread/5cdb4c979a6d5a00177b9ea9', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
 
 describe('get test user profile', () => {
@@ -118,17 +118,17 @@ describe('get test user profile', () => {
             expect(res.statusCode).equals(200);
             done();
         };
-    });
+    }).timeout(10000);
     it('should return undefined', (done) => {
         request.get('https://localhost:8080/user/5cd5f6f65d97905d40aac5d0', (err, res) => {
             expect(res).equals(undefined);
             done();
         });
-    });
+    }).timeout(10000);
     it('should return user profile html', (done) => {
         request.get('http://localhost:8080/user/5cd5f6f65d97905d40aac5d0', (err, res) => {
             expect('Content-Type', /html/);
             done();
         });
-    });
+    }).timeout(10000);
 });
