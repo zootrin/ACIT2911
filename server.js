@@ -307,12 +307,23 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         });
     }
 
+    let view = null;
+    let render = false;
+
+    //console.log(Object.keys(request.query).length);
+    if (Object.keys(request.query).length !== 0) {
+        view = request.query.view;
+        render = true;
+    }
+
     response.render("dms.hbs", {
         title: "DM Inbox",
         heading: "Direct Message Inbox",
         dm_id: user_id_array,
         dm_users: user_array,
-        dms: dmsByUsers
+        dms: dmsByUsers,
+        view: view,
+        render: render
     });
 });
 
