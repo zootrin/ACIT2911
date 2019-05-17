@@ -122,27 +122,6 @@ var userPromise = param_id => {
     });
 };
 
-/*
-var updateUserPromise = (param_id, item) => {
-    return new Promise((resolve, reject) => {
-        var db = utils.getDb();
-        var ObjectId = utils.getObjectId();
-
-        var query = { _id: ObjectId(param_id) };
-        var update = { $push: 
-            { notifications: item }
-        };
-
-        db.collection("users").findOneAndUpdate(query, update, (err, result) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(result);
-        });
-    });
-};
-*/
-
 // Retrieves all threads of a user
 var userthreadPromise = param_username => {
     return new Promise((resolve, reject) => {

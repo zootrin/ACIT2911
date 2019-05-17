@@ -267,11 +267,15 @@ app.get("/user/:id", async (request, response) => {
 });
 
 // Send new direct message
-app.get("/new_dm/:id", checkAuthentication, (request, response) => {
+app.get("/new_dm/:id", checkAuthentication, async (request, response) => {
+    var user = await promises.userPromise(request.params.id);
+
+
     response.render("new_dm.hbs", {
         title: "Direct Message",
         heading: "Send a direct message",
-        recipient_id: request.params.id
+        recipient_id: request.params.id,
+        username: user.username
     });
 });
 
@@ -311,7 +315,6 @@ app.get("/dms", checkAuthentication, async (request, response) => {
         view = request.query.view;
         render = true;
     }
-    //console.log(view, render);
 
     response.render("dms.hbs", {
         title: "DM Inbox",
