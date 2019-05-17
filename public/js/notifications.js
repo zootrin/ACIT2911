@@ -111,7 +111,8 @@ async function closePushSubscription() {
 }
 
 async function openMessageListener() {
-    navigator.serviceWorker.addEventListener("message", async event => {
+    console.log("Opening listener");
+    navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
         idbKeyval.keys().then(count => {
             console.log(count);
@@ -120,29 +121,29 @@ async function openMessageListener() {
     });
 }
 
-
+// TODO: fix
 async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let count = await idbKeyval.keys();
         console.log(count.length);
 
         document.getElementById("notifCount").innerHTML = count.length;
-        // var notifContent = Object.entries(notifications);
-        // var notif = "";
+        var notifContent = Object.entries(notifications);
+        var notif = "";
 
-        // for (i=0; i<notifications.length; i++) {
-        //     var session = JSON.parse(notifContent[i][1]);
+        for (i=0; i<notifications.length; i++) {
+            var session = JSON.parse(notifContent[i][1]);
 
-        //     icon = session.icon;
-        //     content = session.body;
-        //     link = session.url;
+            icon = session.icon;
+            content = session.body;
+            link = session.url;
 
-        //     text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
+            text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
 
-        //     notif += text;
-        // }
+            notif += text;
+        }
 
-        // document.getElementById("notif_list").innerHTML = notif;
+        document.getElementById("notif_list").innerHTML = notif;
     } else {
         await idbKeyval.clear();
         return;
