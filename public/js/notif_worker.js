@@ -65,7 +65,7 @@ function genNotif(event) {
 // };
 
 self.addEventListener("push", async event => {
-    //console.log(event);
+    // console.log(event);
     await clients.claim();
 
     //let allClients = await clients.matchAll({ type: "window" });
@@ -77,6 +77,7 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
+    // TODO: uncomment
     /*
     for (let client of allClients) {
         console.log("Storing notif");

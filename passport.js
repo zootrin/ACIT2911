@@ -64,9 +64,10 @@ passport.use(
                 username: username
             },
             (err, user) => {
-                if (err) {
+                if (err || user == null) {
                     return done(null, false);
                 }
+
                 bcrypt.compare(password, user.password).then(match => {
                     if (match) {
                         return done(null, user);

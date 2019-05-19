@@ -75,7 +75,7 @@ function updateUser(request, response) {
             }
         )
         .then(() => {
-            console.log(request.session);
+            // console.log(request.session);
             response.redirect(`/user/${request.user._id.toString()}`);
         });
 }

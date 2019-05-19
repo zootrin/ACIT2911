@@ -114,10 +114,8 @@ async function openMessageListener() {
     console.log("Opening listener");
     navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
-        idbKeyval.keys().then(count => {
-            console.log(count);
-            document.getElementById("notifCount").innerHTML = count.length;
-        });
+        // window.sessionStorage.setItem(event.data.tag, event.data.message);
+        return updateNotifCount();
     });
 }
 
@@ -125,7 +123,6 @@ async function updateNotifCount() {
     if (document.getElementById("notifCount") !== null) {
         let count = await idbKeyval.keys();
         document.getElementById("notifCount").innerHTML = count.length;
-
 
         var notifContent = [];
         for (i=0; i<count.length; i++) {
