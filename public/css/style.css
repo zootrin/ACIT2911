@@ -222,6 +222,12 @@ input[type="password"]:focus {
     font-style: italic;
 }
 
+#failedLogin {
+    color: red;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
 /* ------------------------------------------- NEW POST PAGE ------------------------------------------- */
 
 .post_text {
