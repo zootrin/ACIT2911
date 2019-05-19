@@ -65,7 +65,7 @@ function genNotif(event) {
 // };
 
 self.addEventListener("push", async event => {
-    //console.log(event);
+    // console.log(event);
     await clients.claim();
 
     //let allClients = await clients.matchAll({ type: "window" });

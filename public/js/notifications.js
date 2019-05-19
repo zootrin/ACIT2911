@@ -114,7 +114,7 @@ async function openMessageListener() {
     console.log("Opening listener");
     navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
-        window.sessionStorage.setItem(event.data.tag, event.data.message);
+        // window.sessionStorage.setItem(event.data.tag, event.data.message);
         return updateNotifCount();
     });
 }

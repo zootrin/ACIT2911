@@ -43,8 +43,8 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
-var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
-// var subEndpoint = "http://localhost:8080/api/getsubscribe";
+// var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
+var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
 async function formatNotif(change, pushSubscription) {
@@ -117,7 +117,7 @@ async function openStream() {
             message: change.fullDocument.message,
             read: false
         };
-        console.log(change);
+        // console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
@@ -229,7 +229,7 @@ async function reply_openStream() {
     const dm_changeStream = collection.watch();
 
     dm_changeStream.on("change", async change => {
-        console.log(change);
+        // console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
