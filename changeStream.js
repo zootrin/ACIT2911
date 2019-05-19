@@ -28,14 +28,7 @@ async function formatNotif(change, pushSubscription) {
             url: `/thread/${change.fullDocument.thread_id}`,
             renotify: true
         };
-
-        
         //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        // console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,
@@ -155,11 +148,6 @@ async function dm_formatNotif(change, pushSubscription) {
             renotify: true
         };
         //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        //console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,

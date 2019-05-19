@@ -1,10 +1,30 @@
-document.getElementById("password").addEventListener("keyup", confirm_password);
-document
-    .getElementById("r_password")
-    .addEventListener("keyup", confirm_password);
-document
-    .querySelector("#form_submit")
-    .addEventListener("click", registration_alert);
+function addPasswordListeners() {
+    let passField = document.getElementById("password");
+    let rPassField = document.getElementById("r_password");
+    let register = document.getElementById("register");
+
+    if (passField) {
+        passField.addEventListener("keyup", confirm_password);
+    }
+
+    if (rPassField) {
+        rPassField.addEventListener("keyup", confirm_password);
+    }
+
+    if (register) {
+        register.addEventListener("click", registration_alert);
+    }
+}
+
+addPasswordListeners();
+
+// document.getElementById("password").addEventListener("keyup", confirm_password);
+// document
+//     .getElementById("r_password")
+//     .addEventListener("keyup", confirm_password);
+// document
+//     .querySelector("#register")
+//     .addEventListener("click", registration_alert);
 
 function confirm_password() {
     var password = document.getElementsByName("password")[0].value;
@@ -13,14 +33,14 @@ function confirm_password() {
     if (password != r_password) {
         document.getElementById("pwd_message").innerHTML =
             "Passwords do not match";
-        document.getElementById("form_submit").disabled = true;
+        document.getElementById("register").disabled = true;
 
         document.getElementsByName("password")[0].className = "diff_pw";
         document.getElementsByName("r_password")[0].className = "diff_pw";
     } else {
         document.getElementById("pwd_message").innerHTML =
             "Passwords match! s('-^)b";
-        document.getElementById("form_submit").disabled = false;
+        document.getElementById("register").disabled = false;
 
         document.getElementsByName("password")[0].className = "same_pw";
         document.getElementsByName("r_password")[0].className = "same_pw";
@@ -51,7 +71,7 @@ function registration_alert() {
 }
 
 function show_edit_form() {
-    var form = document.getElementById('edit_post_form');
+    var form = document.getElementById("edit_post_form");
 
     form.style.display = "block";
 }

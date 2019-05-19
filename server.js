@@ -270,7 +270,6 @@ app.get("/user/:id", async (request, response) => {
 app.get("/new_dm/:id", checkAuthentication, async (request, response) => {
     var user = await promises.userPromise(request.params.id);
 
-
     response.render("new_dm.hbs", {
         title: "Direct Message",
         heading: "Send a direct message",
@@ -374,31 +373,6 @@ app.get("/api/notifs", async (request, response) => {
 app.get("/api/vapidPublicKey", (request, response) => {
     response.send({ key: app.locals.clientVapidKey });
 });
-
-// app.post("/api/push", checkAuthentication, async (request, response) => {
-//     console.log(request);
-//     let title = request.body.notification.title;
-//     let icon = "/images/reply.png";
-//     let body = request.body.notification.body;
-//     let url = request.body.notification.url;
-
-//     let payload = {
-//         title,
-//         icon,
-//         body,
-//         url
-//     };
-
-//     let pushed = await webpush.sendNotification(
-//         app.locals.pushSubscription,
-//         payload
-//     );
-
-//     response.send({
-//         status: pushed.statusCode,
-//         body: pushed.body
-//     });
-// });
 
 app.get("/api/getsubscribe", (request, response) => {
     //console.log(request.user)

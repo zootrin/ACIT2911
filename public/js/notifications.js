@@ -114,7 +114,7 @@ async function openMessageListener() {
     console.log("Opening listener");
     navigator.serviceWorker.addEventListener("message", event => {
         console.log("caught!");
-        // window.sessionStorage.setItem(event.data.tag, event.data.message);
+
         return updateNotifCount();
     });
 }
@@ -125,14 +125,14 @@ async function updateNotifCount() {
         document.getElementById("notifCount").innerHTML = count.length;
 
         var notifContent = [];
-        for (i=0; i<count.length; i++) {
+        for (i = 0; i < count.length; i++) {
             let key = count[i];
             let value = await idbKeyval.get(key);
             notifContent.push(value);
         }
         var notif = "";
 
-        for (i=0; i<count.length; i++) {
+        for (i = 0; i < count.length; i++) {
             var session = JSON.parse(notifContent[i]);
 
             icon = session.icon;
@@ -155,11 +155,21 @@ async function toggleNotif() {
     document.getElementById("notifications").classList.toggle("active");
 }
 
-var ignore = document.getElementById('notifs');
+var ignore = document.getElementById("notifs");
 
 document.onclick = function closeNotif(event) {
+    if (ignore === null) {
+        return;
+    }
+
     var target = event.target || event.srcElement;
-    if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+    if (
+        target.id === "notifs" ||
+        ignore.contains(target) ||
+        target.id === "notifCount" ||
+        target.id === "notifDropdown" ||
+        target.id === "notifImg"
+    ) {
         return;
     }
     document.getElementById("notifs").classList.add("hide");

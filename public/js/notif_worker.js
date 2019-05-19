@@ -68,8 +68,9 @@ self.addEventListener("push", async event => {
     // console.log(event);
     await clients.claim();
 
-    //let allClients = await clients.matchAll({ type: "window" });
+    let allClients = await clients.matchAll({ type: "window" });
     //console.log(allClients[0].focused);
+    
     let data = event.data.json();
     let message = JSON.stringify({
         icon: data.icon,
@@ -78,12 +79,12 @@ self.addEventListener("push", async event => {
     });
 
     // TODO: uncomment
-    /*
+    
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ tag: data.tag, message: message });
     }
-    */
+    
     idbKeyval.set(data.tag, message);
     genNotif(event);
 });
