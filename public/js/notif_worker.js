@@ -116,6 +116,11 @@ function notifLoad(event) {
                             resolve(client.navigate(url));
                         }
                     }
+                    resolve(
+                        allClients[0].navigate(url).then(client => {
+                            client.focus();
+                        })
+                    );
                 } else {
                     resolve(
                         clients.openWindow(url).catch(error => {
