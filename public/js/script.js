@@ -70,7 +70,7 @@ function registration_alert() {
             timer: 1500
         });
 
-        console.log(document.getElementById('password').getAttribute("title"));
+        console.log(document.getElementById("password").getAttribute("title"));
     }
 }
 
