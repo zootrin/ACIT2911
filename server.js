@@ -102,7 +102,7 @@ app.get("/login", (request, response) => {
     let sessionID = request.sessionID;
     let sessionData = JSON.parse(request.sessionStore.sessions[sessionID]);
     var failureFlag = false;
-    var failureMessage = '';
+    var failureMessage = "";
 
     if (sessionData.flash != undefined) {
         failureFlag = true;
@@ -397,6 +397,7 @@ app.get("/api/getsubscribe", (request, response) => {
     //console.log(subscription);
     let user = {
         _id: app.locals.user_id,
+        username: app.locals.username,
         subscribed_threads: app.locals.subscribed_threads
     };
 
@@ -414,6 +415,7 @@ app.get("/api/getsubscribe", (request, response) => {
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     app.locals.pushSubscription = request.body;
     app.locals.user_id = request.user._id;
+    app.locals.username = request.user.username;
     app.locals.subscribed_threads = request.user.subscribed_threads;
     // console.log(app.locals.pushSubscription);
 
