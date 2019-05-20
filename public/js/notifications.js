@@ -171,6 +171,10 @@ async function updateNotifCount() {
             notif += text;
         }
 
+        if (notif == ''){
+            notif = '<p class="noNotifs">No new notifications!</p>';
+        }
+
         document.getElementById("notif_list").innerHTML = notif;
         return new Promise((resolve, reject) => {
             resolve(console.log("Updated inline notifs"));
@@ -193,25 +197,16 @@ async function toggleNotif() {
     document.getElementById("notifications").classList.toggle("active");
 }
 
-var ignore = document.getElementById("notifs");
-
+var ignore = document.getElementById('notifs');
 document.onclick = function closeNotif(event) {
-    if (ignore === null) {
-        return;
+    if (ignore != null) {
+        var target = event.target || event.srcElement;
+        if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+            return;
+        }
+        document.getElementById("notifs").classList.add("hide");
+        document.getElementById("notifications").classList.remove("active");
     }
-
-    var target = event.target || event.srcElement;
-    if (
-        target.id === "notifs" ||
-        ignore.contains(target) ||
-        target.id === "notifCount" ||
-        target.id === "notifDropdown" ||
-        target.id === "notifImg"
-    ) {
-        return;
-    }
-    document.getElementById("notifs").classList.add("hide");
-    document.getElementById("notifications").classList.remove("active");
 };
 
 //closePushSubscription();
