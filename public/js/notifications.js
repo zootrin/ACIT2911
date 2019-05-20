@@ -112,10 +112,38 @@ async function closePushSubscription() {
 
 async function openMessageListener() {
     console.log("Opening listener");
-    navigator.serviceWorker.onmessage = async function(event) {
-        console.log("caught!");
-        console.log(await updateNotifCount());
-    };
+    navigator.serviceWorker.addEventListener("message", async function(event) {
+        console.log(`caught from ${event.source}`);
+        let notifCount = document.getElementById("notifCount");
+        if (notifCount !== null) {
+            let count = await idbKeyval.keys();
+            notifCount.innerHTML = count.length;
+            console.log("changed count");
+
+            let notifContent = [];
+            for (i = 0; i < count.length; i++) {
+                let key = count[i];
+                let value = await idbKeyval.get(key);
+                notifContent.push(value);
+            }
+            let notif = "";
+
+            for (i = 0; i < count.length; i++) {
+                let session = JSON.parse(notifContent[i]);
+
+                icon = session.icon;
+                content = session.body;
+                link = session.url;
+
+                text = `<li><a href="${link}"><p><img src=${icon}>${content}</p></a></li>`;
+
+                notif += text;
+            }
+
+            document.getElementById("notif_list").innerHTML = notif;
+            return;
+        }
+    });
 }
 
 async function updateNotifCount() {
@@ -144,10 +172,19 @@ async function updateNotifCount() {
         }
 
         document.getElementById("notif_list").innerHTML = notif;
-        return "Updated inline notifs";
+        return new Promise((resolve, reject) => {
+            resolve(console.log("Updated inline notifs"));
+        });
     } else {
-        await idbKeyval.clear();
-        return "Cleared inline notifs";
+        return new Promise((resolve, reject) => {
+            resolve(
+                idbKeyval.clear().then(result => {
+                    return console.log("Cleared inline notifs");
+                })
+            );
+        });
+        // await idbKeyval.clear();
+        // return console.log("Cleared inline notifs");
     }
 }
 
