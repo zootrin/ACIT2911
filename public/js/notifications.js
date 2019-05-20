@@ -171,7 +171,7 @@ async function updateNotifCount() {
             notif += text;
         }
 
-        if (notif == ''){
+        if (notif == "") {
             notif = '<p class="noNotifs">No new notifications!</p>';
         }
 
@@ -197,11 +197,17 @@ async function toggleNotif() {
     document.getElementById("notifications").classList.toggle("active");
 }
 
-var ignore = document.getElementById('notifs');
+var ignore = document.getElementById("notifs");
 document.onclick = function closeNotif(event) {
     if (ignore != null) {
         var target = event.target || event.srcElement;
-        if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+        if (
+            target.id === "notifs" ||
+            ignore.contains(target) ||
+            target.id === "notifCount" ||
+            target.id === "notifDropdown" ||
+            target.id === "notifImg"
+        ) {
             return;
         }
         document.getElementById("notifs").classList.add("hide");
@@ -210,9 +216,15 @@ document.onclick = function closeNotif(event) {
 };
 
 //closePushSubscription();
-openPushSubscription();
-openMessageListener();
-updateNotifCount();
+openPushSubscription().catch(error => {
+    return console.log(error.message);
+});
+openMessageListener().catch(error => {
+    return console.log(error.message);
+});
+updateNotifCount().catch(error => {
+    return console.log(error.message);
+});
 
 if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function(result) {
