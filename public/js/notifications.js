@@ -144,6 +144,10 @@ async function updateNotifCount() {
             notif += text;
         }
 
+        if (notif == ''){
+            notif = '<p class="noNotifs">No new notifications!</p>';
+        }
+
         document.getElementById("notif_list").innerHTML = notif;
     } else {
         await idbKeyval.clear();
@@ -156,14 +160,15 @@ async function toggleNotif() {
 }
 
 var ignore = document.getElementById('notifs');
-
 document.onclick = function closeNotif(event) {
-    var target = event.target || event.srcElement;
-    if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
-        return;
+    if (ignore != null) {
+        var target = event.target || event.srcElement;
+        if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+            return;
+        }
+        document.getElementById("notifs").classList.add("hide");
+        document.getElementById("notifications").classList.remove("active");
     }
-    document.getElementById("notifs").classList.add("hide");
-    document.getElementById("notifications").classList.remove("active");
 };
 
 //closePushSubscription();
