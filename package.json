@@ -21,6 +21,7 @@
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
+    "connect-flash": "^0.1.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "hbs": "^4.0.4",

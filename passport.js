@@ -1,12 +1,12 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const utils = require("./utils");
-const watcher = require("./changeStream");
 
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
+const flash = require('connect-flash');
 
 var router = express.Router();
 
@@ -14,9 +14,11 @@ var router = express.Router();
 router.use(express.static("public"));
 router.use(session({ secret: "cats" }));
 router.use(bodyParser.urlencoded({ extended: false }));
+router.use(flash());
 
 router.use(passport.initialize());
 router.use(passport.session());
+
 
 router.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
@@ -47,7 +49,8 @@ passport.deserializeUser((id, done) => {
 router.post(
     "/login",
     passport.authenticate("local", {
-        failureRedirect: "/login"
+        failureRedirect: "/login",
+        failureFlash: 'Invalid username and password'
     }),
     (req, res) => {
         res.redirect("/");

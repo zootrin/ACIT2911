@@ -99,9 +99,25 @@ checkAuthentication_false = (request, response, next) => {
 
 // Login Page
 app.get("/login", (request, response) => {
+    let sessionID = request.sessionID;
+    let sessionData = JSON.parse(request.sessionStore.sessions[sessionID]);
+    var failureFlag = false;
+    var failureMessage = '';
+
+    if (sessionData.flash != undefined) {
+        failureFlag = true;
+        failureMessage = sessionData.flash.error[0];
+
+        delete sessionData["flash"];
+        var deletedError = JSON.stringify(sessionData);
+        request.sessionStore.sessions[sessionID] = deletedError;
+    }
+
     response.render("login.hbs", {
         title: "Login",
-        heading: "Log In"
+        heading: "Log In",
+        failureFlag: failureFlag,
+        failureMessage: failureMessage
     });
 });
 

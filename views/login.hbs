@@ -12,6 +12,10 @@
             <h1>{{heading}}</h1>
             <hr>
 
+            {{#if failureFlag}}
+            <p id="failedLogin">{{failureMessage}}</p>
+            {{/if}}
+
             <label for="username"><b>Username or Email</b></label>
             <input type="text" placeholder="username or email" name="username" required>
 
