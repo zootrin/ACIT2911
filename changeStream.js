@@ -11,8 +11,8 @@ const vapidKeys = {
 };
 
 // TODO: UNCOMMENT BEFORE DEPLOY!!
-// var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe";
-var subEndpoint = "http://localhost:8080/api/getsubscribe";
+var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe";
+// var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
 async function formatNotif(change, pushSubscription) {
