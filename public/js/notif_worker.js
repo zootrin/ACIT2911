@@ -85,14 +85,13 @@ self.addEventListener("push", async event => {
         url: data.url
     });
 
-    // TODO: uncomment
+    idbKeyval.set(data.tag, message);
 
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ tag: data.tag, message: message });
     }
 
-    idbKeyval.set(data.tag, message);
     genNotif(event);
 });
 
@@ -113,7 +112,11 @@ function notifLoad(event) {
                 if (allClients.length !== 0) {
                     for (let client of allClients) {
                         if (client.focused) {
-                            resolve(client.navigate(url));
+                            resolve(
+                                client.navigate(url).then(client => {
+                                    client.focus();
+                                })
+                            );
                         }
                     }
                     resolve(
