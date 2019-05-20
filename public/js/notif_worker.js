@@ -1,6 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable quotes */
 importScripts(
     "https://cdn.jsdelivr.net/npm/idb-keyval@3/dist/idb-keyval-iife.js"
 );
