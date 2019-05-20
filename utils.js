@@ -53,7 +53,7 @@ async function formatNotif(change, pushSubscription) {
         let query = {
             _id: ObjectID(change.fullDocument.thread_id)
         };
-        
+
         let thread = await getDb()
             .collection("messages")
             .findOne(query);
@@ -126,7 +126,10 @@ async function openStream() {
 
         let user = pushSubscription.body.user;
 
-        if (user.subscribed_threads.includes(change.fullDocument.thread_id)) {
+        if (
+            user.subscribed_threads.includes(change.fullDocument.thread_id) &&
+            change.fullDocument.username !== user.username
+        ) {
             let notification = await formatNotif(
                 change,
                 pushSubscription.body.subscription
@@ -141,7 +144,8 @@ async function openStream() {
                             subject: "http://quiet-brook-91223.herokuapp.com/",
                             publicKey: notification.options.publicKey,
                             privateKey: notification.options.privateKey
-                        }
+                        },
+                        TTL: 86400
                     }
                 )
                 .catch(err => {
@@ -253,7 +257,8 @@ async function reply_openStream() {
                             subject: "http://quiet-brook-91223.herokuapp.com/",
                             publicKey: dm_notification.options.publicKey,
                             privateKey: dm_notification.options.privateKey
-                        }
+                        },
+                        TTL: 0
                     }
                 )
                 .catch(err => {

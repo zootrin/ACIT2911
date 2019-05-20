@@ -1,6 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable quotes */
 importScripts(
     "https://cdn.jsdelivr.net/npm/idb-keyval@3/dist/idb-keyval-iife.js"
 );
@@ -51,15 +48,36 @@ function genNotif(event) {
         //console.log(event.data)
         let data = event.data.json();
         //console.log(data);
-        self.registration
-            .showNotification(data.title, {
-                icon: data.icon,
-                body: data.body,
-                data: data.url,
-                tag: data.tag,
-                renotify: data.renotify
-            })
-            .then(resolve);
+        let message = JSON.stringify({
+            icon: data.icon,
+            body: data.title,
+            url: data.url
+        });
+
+        idbKeyval.set(data.tag, message).then(
+            clients
+                .matchAll({
+                    type: "window",
+                    includeUncontrolled: true
+                })
+                .then(allClients => {
+                    for (let client of allClients) {
+                        console.log("Storing notif");
+                        client.postMessage({ tag: data.tag, message: message });
+                    }
+                })
+                .then(
+                    resolve(
+                        self.registration.showNotification(data.title, {
+                            icon: data.icon,
+                            body: data.body,
+                            data: data.url,
+                            tag: data.tag,
+                            renotify: data.renotify
+                        })
+                    )
+                )
+        );
     });
 }
 
@@ -68,9 +86,14 @@ function genNotif(event) {
 //     event.waitUntil(console.log(event));
 // };
 
+self.addEventListener("push", event => {
+    event.waitUntil(genNotif(event));
+});
+
+/*
 self.addEventListener("push", async event => {
     // console.log(event);
-    //await clients.claim();
+    // await clients.claim();
 
     let allClients = await clients.matchAll({
         type: "window",
@@ -90,10 +113,14 @@ self.addEventListener("push", async event => {
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ tag: data.tag, message: message });
+        if (client.visibilityState === "visible") {
+            return;
+        }
     }
 
-    genNotif(event);
+    event.waitUntil(genNotif(event));
 });
+*/
 
 function notifLoad(event) {
     return new Promise((resolve, reject) => {
@@ -111,7 +138,7 @@ function notifLoad(event) {
             .then(allClients => {
                 if (allClients.length !== 0) {
                     for (let client of allClients) {
-                        if (client.focused) {
+                        if (client.visibilityState === "visible") {
                             resolve(
                                 client.navigate(url).then(client => {
                                     client.focus();
@@ -119,22 +146,17 @@ function notifLoad(event) {
                             );
                         }
                     }
-                    resolve(
-                        allClients[0].navigate(url).then(client => {
-                            client.focus();
-                        })
-                    );
                 } else {
-                    resolve(
-                        clients.openWindow(url).catch(error => {
-                            console.log(error.message);
-                        })
-                    );
+                    resolve(clients.openWindow(url));
                 }
             });
     });
 }
 
 self.addEventListener("notificationclick", event => {
-    event.waitUntil(notifLoad(event));
+    event.waitUntil(
+        notifLoad(event).catch(error => {
+            console.log(error.message);
+        })
+    );
 });

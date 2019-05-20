@@ -171,7 +171,7 @@ async function updateNotifCount() {
             notif += text;
         }
 
-        if (notif == ''){
+        if (notif == "") {
             notif = '<p class="noNotifs">No new notifications!</p>';
         }
 
@@ -197,11 +197,17 @@ async function toggleNotif() {
     document.getElementById("notifications").classList.toggle("active");
 }
 
-var ignore = document.getElementById('notifs');
+var ignore = document.getElementById("notifs");
 document.onclick = function closeNotif(event) {
     if (ignore != null) {
         var target = event.target || event.srcElement;
-        if (target.id === 'notifs' || ignore.contains(target) || target.id === 'notifCount' || target.id === 'notifDropdown' || target.id === 'notifImg') {
+        if (
+            target.id === "notifs" ||
+            ignore.contains(target) ||
+            target.id === "notifCount" ||
+            target.id === "notifDropdown" ||
+            target.id === "notifImg"
+        ) {
             return;
         }
         document.getElementById("notifs").classList.add("hide");
@@ -210,12 +216,42 @@ document.onclick = function closeNotif(event) {
 };
 
 //closePushSubscription();
-openPushSubscription();
-openMessageListener();
-updateNotifCount();
+openPushSubscription().catch(error => {
+    return console.log(error.message);
+});
+openMessageListener().catch(error => {
+    return console.log(error.message);
+});
+updateNotifCount().catch(error => {
+    return console.log(error.message);
+});
 
 if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function(result) {
         console.log(result);
     });
 }
+
+/*
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", e => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+});
+
+document.getElementById("logo").addEventListener("click", e => {
+    // Show the prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === "accepted") {
+            console.log("User accepted the A2HS prompt");
+        } else {
+            console.log("User dismissed the A2HS prompt");
+        }
+        deferredPrompt = null;
+    });
+});
+*/

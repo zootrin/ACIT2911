@@ -77,7 +77,10 @@ async function openStream() {
 
         let user = pushSubscription.body.user;
 
-        if (user.subscribed_threads.includes(change.fullDocument.thread_id)) {
+        if (
+            user.subscribed_threads.includes(change.fullDocument.thread_id) &&
+            change.fullDocument.username !== user.username
+        ) {
             let notification = await formatNotif(
                 change,
                 pushSubscription.body.subscription
