@@ -53,7 +53,7 @@ async function formatNotif(change, pushSubscription) {
         let query = {
             _id: ObjectID(change.fullDocument.thread_id)
         };
-        
+
         let thread = await getDb()
             .collection("messages")
             .findOne(query);
@@ -126,7 +126,10 @@ async function openStream() {
 
         let user = pushSubscription.body.user;
 
-        if (user.subscribed_threads.includes(change.fullDocument.thread_id)) {
+        if (
+            user.subscribed_threads.includes(change.fullDocument.thread_id) &&
+            change.fullDocument.username !== user.username
+        ) {
             let notification = await formatNotif(
                 change,
                 pushSubscription.body.subscription
