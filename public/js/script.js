@@ -29,16 +29,18 @@ function confirm_password() {
 
 function registration_alert() {
     var form = document.getElementById("registration_form");
-    setTimeout(function() {
-        form.submit();
-    }, 5000);
+
     if (form.checkValidity() != false) {
         Swal.fire({
             title: "Checking over your credentials!",
             type: "success",
             showConfirmButton: false,
-            timer: 2000
+            timer: 2500
         });
+
+        setTimeout(() => {
+            form.submit();
+        }, 2500);
     } else {
         Swal.fire({
             title: "Error!",
@@ -47,6 +49,8 @@ function registration_alert() {
             showConfirmButton: false,
             timer: 1500
         });
+
+        console.log(document.getElementById('password').getAttribute("title"));
     }
 }
 
