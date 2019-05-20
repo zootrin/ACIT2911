@@ -1,5 +1,5 @@
 const utils = require("./utils.js");
-const MongoClient = require("mongodb").MongoClient;
+//const MongoClient = require("mongodb").MongoClient;
 //const _ = require("lodash");
 
 // Populates message board page with the titles of each

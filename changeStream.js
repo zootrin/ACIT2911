@@ -10,6 +10,7 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
+// TODO: UNCOMMENT BEFORE DEPLOY!!
 // var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe";
 var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
@@ -28,14 +29,7 @@ async function formatNotif(change, pushSubscription) {
             url: `/thread/${change.fullDocument.thread_id}`,
             renotify: true
         };
-
-        
         //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        // console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,
@@ -155,11 +149,6 @@ async function dm_formatNotif(change, pushSubscription) {
             renotify: true
         };
         //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        //console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,
