@@ -112,11 +112,10 @@ async function closePushSubscription() {
 
 async function openMessageListener() {
     console.log("Opening listener");
-    navigator.serviceWorker.addEventListener("message", event => {
+    navigator.serviceWorker.onmessage = async function(event) {
         console.log("caught!");
-
-        return updateNotifCount();
-    });
+        console.log(await updateNotifCount());
+    };
 }
 
 async function updateNotifCount() {
@@ -145,8 +144,10 @@ async function updateNotifCount() {
         }
 
         document.getElementById("notif_list").innerHTML = notif;
+        return "Updated inline notifs";
     } else {
         await idbKeyval.clear();
+        return "Cleared inline notifs";
     }
 }
 

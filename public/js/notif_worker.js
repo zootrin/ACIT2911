@@ -24,6 +24,10 @@ self.addEventListener("install", event => {
     );
 });
 
+self.addEventListener("activate", event => {
+    event.waitUntil(clients.claim());
+});
+
 self.addEventListener("fetch", event => {
     if (event.request.destination === "document") {
         //console.log(event.request);
@@ -66,11 +70,14 @@ function genNotif(event) {
 
 self.addEventListener("push", async event => {
     // console.log(event);
-    await clients.claim();
+    //await clients.claim();
 
-    let allClients = await clients.matchAll({ type: "window" });
+    let allClients = await clients.matchAll({
+        type: "window",
+        includeUncontrolled: true
+    });
     //console.log(allClients[0].focused);
-    
+
     let data = event.data.json();
     let message = JSON.stringify({
         icon: data.icon,
@@ -79,23 +86,47 @@ self.addEventListener("push", async event => {
     });
 
     // TODO: uncomment
-    
+
     for (let client of allClients) {
         console.log("Storing notif");
         client.postMessage({ tag: data.tag, message: message });
     }
-    
+
     idbKeyval.set(data.tag, message);
     genNotif(event);
 });
 
-self.onnotificationclick = async function(event) {
-    let url = event.notification.data;
-    console.log("Clicked:", event.notification.tag);
-    event.notification.close();
+function notifLoad(event) {
+    return new Promise((resolve, reject) => {
+        let url = event.notification.data;
+        if (url === null) {
+            reject("No url!");
+        }
+        console.log("Clicked:", event.notification.tag);
+        event.notification.close();
+        clients
+            .matchAll({
+                type: "window",
+                includeUncontrolled: true
+            })
+            .then(allClients => {
+                if (allClients.length !== 0) {
+                    for (let client of allClients) {
+                        if (client.focused) {
+                            resolve(client.navigate(url));
+                        }
+                    }
+                } else {
+                    resolve(
+                        clients.openWindow(url).catch(error => {
+                            console.log(error.message);
+                        })
+                    );
+                }
+            });
+    });
+}
 
-    let allClients = await clients.matchAll({ type: "window" });
-    console.log(allClients[0]);
-
-    event.waitUntil(allClients[0].navigate(url));
-};
+self.addEventListener("notificationclick", event => {
+    event.waitUntil(notifLoad(event));
+});
