@@ -35,19 +35,18 @@ var server = app.listen(port, () => {
     utils.init();
 });
 
+/*
 const vapidKeys = {
     publicKey:
         "BKyb0KGvc8HKy4A-RDJJ0_tZKUiXMlVcmBBhYSEz9U08Nc0xAuvA6uWv7ANEyJm6o0voRItkHhz5y0X0bEAw4Wo",
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
+*/
+const vapidKeys = utils.vapidKeys;
+console.log(vapidKeys);
+
 app.locals.clientVapidKey = vapidKeys.publicKey;
 //console.log(app.locals.clientVapidKey);
-
-webpush.setVapidDetails(
-    "http://quiet-brook-91223.herokuapp.com/",
-    vapidKeys.publicKey,
-    vapidKeys.privateKey
-);
 
 hbs.registerPartials(__dirname + "/views/partials");
 
@@ -413,6 +412,8 @@ app.get("/api/getsubscribe", (request, response) => {
 
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
     app.locals.pushSubscription = request.body;
+
+    // console.log(request);
     app.locals.user_id = request.user._id;
     app.locals.username = request.user.username;
     app.locals.subscribed_threads = request.user.subscribed_threads;

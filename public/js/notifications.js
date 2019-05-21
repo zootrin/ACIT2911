@@ -1,8 +1,4 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable quotes */
-
-var getPublicKey = async () => {
+async function getPublicKey() {
     let key = await fetch("/api/vapidPublicKey", {
         method: "GET"
     }).then(response => {
@@ -12,7 +8,7 @@ var getPublicKey = async () => {
     //console.log(vapidPublicKey);
 
     return vapidPublicKey;
-};
+}
 var vapidPublicKey = getPublicKey();
 //console.log(vapidPublicKey);
 

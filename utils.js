@@ -37,11 +37,14 @@ var init = callback => {
 const fetch = require("node-fetch");
 const webpush = require("web-push");
 
+/*
 const vapidKeys = {
     publicKey:
         "BKyb0KGvc8HKy4A-RDJJ0_tZKUiXMlVcmBBhYSEz9U08Nc0xAuvA6uWv7ANEyJm6o0voRItkHhz5y0X0bEAw4Wo",
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
+*/
+const vapidKeys = webpush.generateVAPIDKeys();
 
 // TODO: Change endpoints
 var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
@@ -77,8 +80,7 @@ async function formatNotif(change, pushSubscription) {
 
         let notification = {
             pushSubscription: pushSubscription,
-            payload: JSON.stringify(payload),
-            options: vapidKeys
+            payload: JSON.stringify(payload)
         };
         //console.log(notification)
 
@@ -123,8 +125,8 @@ async function openStream() {
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
-        //console.log(pushSubscription.body);
 
+        // console.log(pushSubscription.body);
         let user = pushSubscription.body.user;
 
         if (
@@ -142,9 +144,9 @@ async function openStream() {
                     notification.payload,
                     {
                         vapidDetails: {
-                            subject: "http://quiet-brook-91223.herokuapp.com/",
-                            publicKey: notification.options.publicKey,
-                            privateKey: notification.options.privateKey
+                            subject: "https://quiet-brook-91223.herokuapp.com/",
+                            publicKey: vapidKeys.publicKey,
+                            privateKey: vapidKeys.privateKey
                         },
                         TTL: 86400
                     }
@@ -211,8 +213,7 @@ async function dm_formatNotif(change, pushSubscription) {
 
         let notification = {
             pushSubscription: pushSubscription,
-            payload: JSON.stringify(payload),
-            options: vapidKeys
+            payload: JSON.stringify(payload)
         };
         //console.log(notification)
 
@@ -239,6 +240,7 @@ async function reply_openStream() {
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
+        // console.log(pushSubscription.body);
 
         if (
             change.fullDocument.recipient.toString() ===
@@ -255,9 +257,9 @@ async function reply_openStream() {
                     dm_notification.payload,
                     {
                         vapidDetails: {
-                            subject: "http://quiet-brook-91223.herokuapp.com/",
-                            publicKey: dm_notification.options.publicKey,
-                            privateKey: dm_notification.options.privateKey
+                            subject: "https://quiet-brook-91223.herokuapp.com/",
+                            publicKey: vapidKeys.publicKey,
+                            privateKey: vapidKeys.privateKey
                         },
                         TTL: 86400
                     }
@@ -276,5 +278,6 @@ async function reply_openStream() {
 module.exports = {
     getDb: getDb,
     getObjectId: getObjectId,
-    init: init
+    init: init,
+    vapidKeys: vapidKeys
 };
