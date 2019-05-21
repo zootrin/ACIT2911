@@ -54,30 +54,29 @@ function genNotif(event) {
             url: data.url
         });
 
-        idbKeyval.set(data.tag, message).then(
-            clients
-                .matchAll({
-                    type: "window",
-                    includeUncontrolled: true
-                })
-                .then(allClients => {
-                    for (let client of allClients) {
-                        console.log("Storing notif");
-                        client.postMessage({ tag: data.tag, message: message });
-                    }
-                })
-                .then(
-                    resolve(
-                        self.registration.showNotification(data.title, {
-                            icon: data.icon,
-                            body: data.body,
-                            data: data.url,
-                            tag: data.tag,
-                            renotify: data.renotify
-                        })
-                    )
+        idbKeyval.set(data.tag, message);
+        clients
+            .matchAll({
+                type: "window",
+                includeUncontrolled: true
+            })
+            .then(allClients => {
+                for (let client of allClients) {
+                    console.log("Storing notif");
+                    client.postMessage({ tag: data.tag, message: message });
+                }
+            })
+            .then(
+                resolve(
+                    self.registration.showNotification(data.title, {
+                        icon: data.icon,
+                        body: data.body,
+                        data: data.url,
+                        tag: data.tag,
+                        renotify: data.renotify
+                    })
                 )
-        );
+            );
     });
 }
 
@@ -141,7 +140,7 @@ function notifLoad(event) {
                         if (client.visibilityState === "visible") {
                             resolve(
                                 client.navigate(url).then(client => {
-                                    client.focus();
+                                    return client.focus();
                                 })
                             );
                         }
