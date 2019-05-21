@@ -146,7 +146,7 @@ async function openStream() {
                             publicKey: notification.options.publicKey,
                             privateKey: notification.options.privateKey
                         },
-                        TTL: 86400
+                        // TTL: 86400
                     }
                 )
                 .catch(err => {
@@ -259,7 +259,7 @@ async function reply_openStream() {
                             publicKey: dm_notification.options.publicKey,
                             privateKey: dm_notification.options.privateKey
                         },
-                        TTL: 0
+                        // TTL: 0
                     }
                 )
                 .catch(err => {
