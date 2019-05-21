@@ -114,12 +114,6 @@ async function openStream() {
     ]);
 
     thread_changeStream.on("change", async change => {
-        var item = {
-            _id: change.fullDocument._id,
-            thread_id: change.fullDocument.thread_id,
-            message: change.fullDocument.message,
-            read: false
-        };
         console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
@@ -158,6 +152,7 @@ async function openStream() {
                 });
 
             console.log(`Push: ${pushed.statusCode}`);
+            return;
         }
 
         //await promises.updateUserPromise(user._id, item);
