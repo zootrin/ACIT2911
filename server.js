@@ -13,7 +13,6 @@ const pass = require("./passport.js");
 const forum = require("./forum.js");
 const promises = require("./promises.js");
 const dms = require("./messaging.js");
-const watcher = require("./changeStream.js");
 
 const app = express();
 const path = require("path");

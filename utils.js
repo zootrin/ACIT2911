@@ -43,8 +43,9 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
-// var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
-var subEndpoint = "http://localhost:8080/api/getsubscribe";
+// TODO: Change endpoints
+var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
+// var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
 async function formatNotif(change, pushSubscription) {
