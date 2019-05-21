@@ -43,6 +43,7 @@ const vapidKeys = {
     privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
 };
 
+// TODO: UNCOMMENT BEFORE DEPLOY!!
 // var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
 var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
