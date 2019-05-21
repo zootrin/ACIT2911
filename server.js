@@ -388,35 +388,41 @@ app.get("/api/vapidPublicKey", (request, response) => {
     response.send({ key: app.locals.clientVapidKey });
 });
 
-app.get("/api/getsubscribe", (request, response) => {
-    //console.log(request.user)
+// app.get("/api/getsubscribe", (request, response) => {
+//     //console.log(request.user)
 
-    let subscription = app.locals.pushSubscription;
-    //console.log(subscription);
-    let user = {
-        _id: app.locals.user_id,
-        username: app.locals.username,
-        subscribed_threads: app.locals.subscribed_threads
-    };
+//     let subscription = app.locals.pushSubscription;
+//     //console.log(subscription);
+//     let user = {
+//         _id: app.locals.user_id,
+//         username: app.locals.username,
+//         subscribed_threads: app.locals.subscribed_threads
+//     };
 
-    //console.log(user);
+//     //console.log(user);
 
-    response.send({
-        status: 200,
-        body: {
-            subscription: subscription,
-            user: user
-        }
-    });
-});
+//     response.send({
+//         status: 200,
+//         body: {
+//             subscription: subscription,
+//             user: user
+//         }
+//     });
+// });
 
 app.post("/api/pushsubscribe", checkAuthentication, (request, response) => {
-    app.locals.pushSubscription = request.body;
+
+    let user_id = request.user._id;
+    let endpoint = request.body;
+
+    promises.updateUserPromise(user_id, endpoint);
+
+    // app.locals.pushSubscription = request.body;
 
     // console.log(request);
-    app.locals.user_id = request.user._id;
-    app.locals.username = request.user.username;
-    app.locals.subscribed_threads = request.user.subscribed_threads;
+    // app.locals.user_id = request.user._id;
+    // app.locals.username = request.user.username;
+    // app.locals.subscribed_threads = request.user.subscribed_threads;
     // console.log(app.locals.pushSubscription);
 
     response.send({ status: 200 });

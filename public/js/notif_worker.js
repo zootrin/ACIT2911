@@ -43,6 +43,8 @@ self.addEventListener("fetch", event => {
     }
 });
 
+
+// TODO: Delete, not used
 function genNotif(event) {
     return new Promise((resolve, reject) => {
         //console.log(event.data)
