@@ -43,11 +43,8 @@ self.addEventListener("fetch", event => {
     }
 });
 
-
-// TODO: Delete, not used
 function genNotif(event) {
     return new Promise((resolve, reject) => {
-        //console.log(event.data)
         let data = event.data.json();
         //console.log(data);
         let message = JSON.stringify({
@@ -82,47 +79,10 @@ function genNotif(event) {
     });
 }
 
-// self.onmessage = async function(event) {
-//     console.log("Caught!");
-//     event.waitUntil(console.log(event));
-// };
-
 self.addEventListener("push", event => {
     console.log(event);
     event.waitUntil(genNotif(event));
 });
-
-/*
-self.addEventListener("push", async event => {
-    // console.log(event);
-    // await clients.claim();
-
-    let allClients = await clients.matchAll({
-        type: "window",
-        includeUncontrolled: true
-    });
-    //console.log(allClients[0].focused);
-
-    let data = event.data.json();
-    let message = JSON.stringify({
-        icon: data.icon,
-        body: data.title,
-        url: data.url
-    });
-
-    idbKeyval.set(data.tag, message);
-
-    for (let client of allClients) {
-        console.log("Storing notif");
-        client.postMessage({ tag: data.tag, message: message });
-        if (client.visibilityState === "visible") {
-            return;
-        }
-    }
-
-    event.waitUntil(genNotif(event));
-});
-*/
 
 function notifLoad(event) {
     return new Promise((resolve, reject) => {

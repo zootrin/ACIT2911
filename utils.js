@@ -32,23 +32,10 @@ var init = callback => {
     );
 };
 
-//const promises = require("./promises");
-//const request = require("request");
 const fetch = require("node-fetch");
 const webpush = require("web-push");
 
-/*
-const vapidKeys = {
-    publicKey:
-        "BKyb0KGvc8HKy4A-RDJJ0_tZKUiXMlVcmBBhYSEz9U08Nc0xAuvA6uWv7ANEyJm6o0voRItkHhz5y0X0bEAw4Wo",
-    privateKey: "LUZkyfprh3w6EHFNL9RrTLCAjLNp7rnnGbj--h_JsWc"
-};
-*/
 const vapidKeys = webpush.generateVAPIDKeys();
-
-// TODO: CHANGE ENDPOINT BEFORE DEPLOY
-var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe";
-// var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
 async function formatNotif(change, pushSubscription) {
@@ -71,18 +58,11 @@ async function formatNotif(change, pushSubscription) {
             url: `/thread/${change.fullDocument.thread_id}`,
             renotify: false
         };
-        //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        // console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,
             payload: JSON.stringify(payload)
         };
-        //console.log(notification)
 
         return notification;
     }
@@ -91,25 +71,11 @@ async function formatNotif(change, pushSubscription) {
 // opens changestream for threads
 async function openStream() {
     var db = getDb();
-
-    //var user = await promises.userPromise(user_id);
-
     const collection = db.collection("messages");
 
     const thread_changeStream = collection.watch([
         {
-            $match: {
-                // $and: [
-                //     { "fullDocument.type": "reply" },
-                //     {
-                //         "fullDocument.thread_id": {
-                //             $in: user.subscribed_threads
-                //         }
-                //     } //,
-                //     //{ "fullDocument.username": { $ne: user.username } }
-                // ]
-                "fullDocument.type": "reply"
-            }
+            $match: { "fullDocument.type": "reply" }
         }
     ]);
 
@@ -121,12 +87,6 @@ async function openStream() {
 
         let user_array = await db.collection("users").find(query).toArray();
         var filtered_user_array = user_array.filter(user => user.username != change.fullDocument.username);
-        
-        // console.log(change);
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
 
         for (var i=0; i<filtered_user_array.length; i++) {
 
@@ -159,17 +119,12 @@ async function openStream() {
             console.log(`Push: ${pushed.statusCode}`);
             console.log(`Username: ${filtered_user_array[i].username}`);
         }
-
-        //await promises.updateUserPromise(user._id, item);
     });
 }
 
 // closes thread stream notifications
 async function closeStream(user_id) {
     var db = getDb();
-
-    //var user = await promises.userPromise(user_id);
-
     const collection = db.collection("messages");
 
     const thread_changeStream = collection.watch([
@@ -181,8 +136,7 @@ async function closeStream(user_id) {
                         "fullDocument.thread_id": {
                             $in: user.subscribed_threads
                         }
-                    } //,
-                    //{ "fullDocument.username": { $ne: user.username } }
+                    } 
                 ]
             }
         }
@@ -204,18 +158,11 @@ async function dm_formatNotif(change, pushSubscription) {
             url: `/dms?view=${change.fullDocument.sender}`,
             renotify: true
         };
-        //console.log(JSON.stringify(payload));
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        //console.log(pushSubscription.body);
 
         let notification = {
             pushSubscription: pushSubscription,
             payload: JSON.stringify(payload)
         };
-        //console.log(notification)
 
         return notification;
     }
@@ -227,12 +174,6 @@ async function reply_openStream() {
 
     const collection = db.collection("direct_message");
 
-    // var query = [
-    //     {
-    //         $match: { "fullDocument.recipient": user_id }
-    //     }
-    // ];
-
     const dm_changeStream = collection.watch();
 
     dm_changeStream.on("change", async change => {
@@ -243,13 +184,6 @@ async function reply_openStream() {
         let pushSubscription = recipient.endpoint;
 
         console.log(pushSubscription);
-
-        // console.log(change);
-
-        // let pushSubscription = await fetch(subEndpoint).then(response => {
-        //     return response.json();
-        // });
-        // console.log(pushSubscription.body);
 
         let dm_notification = await dm_formatNotif(
             change,
