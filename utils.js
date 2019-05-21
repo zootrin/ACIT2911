@@ -47,7 +47,7 @@ const vapidKeys = {
 const vapidKeys = webpush.generateVAPIDKeys();
 
 // TODO: Change endpoints
-var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe"
+var subEndpoint = "https://quiet-brook-91223.herokuapp.com/api/getsubscribe";
 // var subEndpoint = "http://localhost:8080/api/getsubscribe";
 
 // formats replies notifications
@@ -61,7 +61,7 @@ async function formatNotif(change, pushSubscription) {
         let thread = await getDb()
             .collection("messages")
             .findOne(query);
-        //console.log(thread);
+        console.log(thread);
 
         let payload = {
             title: `${change.fullDocument.username} posted in ${thread.title}`,
@@ -120,13 +120,13 @@ async function openStream() {
             message: change.fullDocument.message,
             read: false
         };
-        // console.log(change);
+        console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
 
-        // console.log(pushSubscription.body);
+        console.log(pushSubscription.body);
         let user = pushSubscription.body.user;
 
         if (
@@ -235,12 +235,12 @@ async function reply_openStream() {
     const dm_changeStream = collection.watch();
 
     dm_changeStream.on("change", async change => {
-        // console.log(change);
+        console.log(change);
 
         let pushSubscription = await fetch(subEndpoint).then(response => {
             return response.json();
         });
-        // console.log(pushSubscription.body);
+        console.log(pushSubscription.body);
 
         if (
             change.fullDocument.recipient.toString() ===
